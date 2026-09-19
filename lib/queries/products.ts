@@ -84,3 +84,35 @@ export function useDeleteProductMutation() {
     },
   });
 }
+
+export function useUploadProductImageMutation(productId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await http.post<Product>(`/products/${productId}/images`, formData);
+      return res.data;
+    },
+    onSuccess: (product) => {
+      queryClient.setQueryData(productKeys.detail(productId), product);
+      queryClient.invalidateQueries({ queryKey: productKeys.all });
+    },
+  });
+}
+
+export function useRemoveProductImageMutation(productId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (path: string) => {
+      const res = await http.delete<Product>(`/products/${productId}/images`, {
+        data: { path },
+      });
+      return res.data;
+    },
+    onSuccess: (product) => {
+      queryClient.setQueryData(productKeys.detail(productId), product);
+      queryClient.invalidateQueries({ queryKey: productKeys.all });
+    },
+  });
+}

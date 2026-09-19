@@ -8,6 +8,7 @@ import { slugify } from "@/lib/utils";
 import { extractErrorMessage } from "@/lib/http";
 import { Button } from "@/components/ui/Button";
 import { Field, inputClass, textareaClass } from "@/components/ui/Field";
+import { ProductImageManager } from "./ProductImageManager";
 import {
   useCreateProductMutation,
   useUpdateProductMutation,
@@ -98,8 +99,9 @@ export function ProductForm({
     };
 
     try {
-      await mutation.mutateAsync(payload);
-      router.push("/products");
+      const saved = await mutation.mutateAsync(payload);
+      // Land on the edit page after creating so photos can be added right away.
+      router.push(isEdit ? "/products" : `/products/${saved._id}`);
     } catch {
       // surfaced below via mutation.error
     }
@@ -118,6 +120,8 @@ export function ProductForm({
           className={inputClass}
         />
       </Field>
+
+      {product && <ProductImageManager productId={product._id} images={product.images} />}
 
       <div className="grid grid-cols-2 gap-4">
         <Field label="Категорія" htmlFor="category">

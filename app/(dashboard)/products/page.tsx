@@ -7,6 +7,7 @@ import { LuPencil, LuPlus } from "react-icons/lu";
 import { useProductsQuery } from "@/lib/queries/products";
 import { Category } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
+import { getAssetUrl } from "@/lib/assets";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { ProductsSearch } from "@/components/products/ProductsSearch";
@@ -53,8 +54,24 @@ function ProductsPageContent() {
               return (
                 <tr key={product._id}>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-ink">{product.name}</p>
-                    <p className="text-xs text-ink-soft">{product.subcategory}</p>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-11 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-line bg-paper-soft">
+                        {product.images[0] ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={getAssetUrl(product.images[0])}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-[9px] text-ink-soft">—</span>
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium text-ink">{product.name}</p>
+                        <p className="text-xs text-ink-soft">{product.subcategory}</p>
+                      </div>
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-ink-soft">{categoryName}</td>
                   <td className="px-4 py-3">
