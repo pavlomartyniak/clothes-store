@@ -45,6 +45,15 @@ export class ProductsService {
     return product;
   }
 
+  async findBySlug(slug: string) {
+    const product = await this.productModel
+      .findOne({ slug })
+      .populate('category', 'name slug')
+      .exec();
+    if (!product) throw new NotFoundException('Товар не знайдено');
+    return product;
+  }
+
   async update(id: string, dto: UpdateProductDto) {
     const product = await this.productModel
       .findByIdAndUpdate(id, dto, { new: true })
