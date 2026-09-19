@@ -1,22 +1,21 @@
+"use client";
+
 import { Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { LuPencil, LuPlus } from "react-icons/lu";
-import { api } from "@/lib/api";
-import { Category, Product } from "@/lib/types";
+import { useProductsQuery } from "@/lib/queries/products";
+import { Category } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { ProductsSearch } from "@/components/products/ProductsSearch";
 import { DeleteProductButton } from "@/components/products/DeleteProductButton";
 
-export default async function ProductsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ search?: string }>;
-}) {
-  const { search } = await searchParams;
-  const query = search ? `?search=${encodeURIComponent(search)}` : "";
-  const products = await api.get<Product[]>(`/products${query}`);
+function ProductsPageContent() {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") ?? undefined;
+  const { data: products = [], isLoading } = useProductsQuery(search);
 
   return (
     <div>
@@ -32,9 +31,7 @@ export default async function ProductsPage({
       </div>
 
       <div className="mt-6">
-        <Suspense fallback={<div className="h-10 w-64 rounded-lg bg-paper-soft" />}>
-          <ProductsSearch />
-        </Suspense>
+        <ProductsSearch />
       </div>
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-line">
@@ -91,7 +88,7 @@ export default async function ProductsPage({
                 </tr>
               );
             })}
-            {products.length === 0 && (
+            {!isLoading && products.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-4 py-10 text-center text-ink-soft">
                   Товарів не знайдено
@@ -102,5 +99,13 @@ export default async function ProductsPage({
         </table>
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="h-96 rounded-2xl bg-paper-soft" />}>
+      <ProductsPageContent />
+    </Suspense>
   );
 }

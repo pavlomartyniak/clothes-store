@@ -1,19 +1,18 @@
+"use client";
+
 import { Suspense } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
-import { Order, OrderStatus } from "@/lib/types";
+import { useSearchParams } from "next/navigation";
+import { useOrdersQuery } from "@/lib/queries/orders";
+import { OrderStatus } from "@/lib/types";
 import { formatDate, formatPrice } from "@/lib/utils";
 import { StatusBadge } from "@/components/orders/StatusBadge";
 import { OrderStatusFilter } from "@/components/orders/OrderStatusFilter";
 
-export default async function OrdersPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ status?: OrderStatus }>;
-}) {
-  const { status } = await searchParams;
-  const query = status ? `?status=${status}` : "";
-  const orders = await api.get<Order[]>(`/orders${query}`);
+function OrdersPageContent() {
+  const searchParams = useSearchParams();
+  const status = (searchParams.get("status") as OrderStatus) || undefined;
+  const { data: orders = [] } = useOrdersQuery(status);
 
   return (
     <div>
@@ -21,9 +20,7 @@ export default async function OrdersPage({
       <p className="mt-1 text-sm text-ink-soft">{orders.length} замовлень</p>
 
       <div className="mt-6">
-        <Suspense fallback={<div className="h-9 w-full rounded-full bg-paper-soft" />}>
-          <OrderStatusFilter />
-        </Suspense>
+        <OrderStatusFilter />
       </div>
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-line">
@@ -73,5 +70,13 @@ export default async function OrdersPage({
         </table>
       </div>
     </div>
+  );
+}
+
+export default function OrdersPage() {
+  return (
+    <Suspense fallback={<div className="h-96 rounded-2xl bg-paper-soft" />}>
+      <OrdersPageContent />
+    </Suspense>
   );
 }

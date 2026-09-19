@@ -1,10 +1,11 @@
-import { api } from "@/lib/api";
-import { Category } from "@/lib/types";
+"use client";
+
+import { useCategoriesQuery } from "@/lib/queries/categories";
 import { CreateCategoryForm } from "@/components/categories/CreateCategoryForm";
 import { CategoryCard } from "@/components/categories/CategoryCard";
 
-export default async function CategoriesPage() {
-  const categories = await api.get<Category[]>("/categories");
+export default function CategoriesPage() {
+  const { data: categories = [] } = useCategoriesQuery();
 
   return (
     <div>

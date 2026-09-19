@@ -1,20 +1,15 @@
 "use client";
 
-import { useState, useTransition } from "react";
 import { LuTrash2 } from "react-icons/lu";
-import { deleteProductAction } from "@/lib/actions/products";
+import { useDeleteProductMutation } from "@/lib/queries/products";
+import { extractErrorMessage } from "@/lib/http";
 
 export function DeleteProductButton({ id, name }: { id: string; name: string }) {
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const deleteProduct = useDeleteProductMutation();
 
   function handleDelete() {
     if (!confirm(`Видалити товар "${name}"?`)) return;
-    setError(null);
-    startTransition(async () => {
-      const result = await deleteProductAction(id);
-      if (result.error) setError(result.error);
-    });
+    deleteProduct.mutate(id);
   }
 
   return (
@@ -22,15 +17,15 @@ export function DeleteProductButton({ id, name }: { id: string; name: string }) 
       <button
         type="button"
         onClick={handleDelete}
-        disabled={isPending}
+        disabled={deleteProduct.isPending}
         aria-label="Видалити товар"
         className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-red-50 hover:text-danger"
       >
         <LuTrash2 size={16} />
       </button>
-      {error && (
+      {deleteProduct.isError && (
         <p className="absolute right-0 top-full z-10 mt-1 w-48 rounded-lg bg-danger px-2 py-1 text-xs text-paper">
-          {error}
+          {extractErrorMessage(deleteProduct.error)}
         </p>
       )}
     </div>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { updateOrderStatusAction } from "@/lib/actions/orders";
+import { useState } from "react";
+import { useUpdateOrderStatusMutation } from "@/lib/queries/orders";
+import { extractErrorMessage } from "@/lib/http";
 import { ORDER_STATUS_LABELS, OrderStatus } from "@/lib/types";
 import { inputClass } from "@/components/ui/Field";
 
@@ -21,26 +22,21 @@ export function OrderStatusSelect({
   status: OrderStatus;
 }) {
   const [value, setValue] = useState(status);
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const updateStatus = useUpdateOrderStatusMutation();
 
   function handleChange(next: OrderStatus) {
     setValue(next);
-    setError(null);
-    startTransition(async () => {
-      const result = await updateOrderStatusAction(orderId, next);
-      if (result.error) {
-        setError(result.error);
-        setValue(status);
-      }
-    });
+    updateStatus.mutate(
+      { id: orderId, status: next },
+      { onError: () => setValue(status) }
+    );
   }
 
   return (
     <div>
       <select
         value={value}
-        disabled={isPending}
+        disabled={updateStatus.isPending}
         onChange={(e) => handleChange(e.target.value as OrderStatus)}
         className={inputClass}
       >
@@ -50,7 +46,9 @@ export function OrderStatusSelect({
           </option>
         ))}
       </select>
-      {error && <p className="mt-2 text-sm text-danger">{error}</p>}
+      {updateStatus.isError && (
+        <p className="mt-2 text-sm text-danger">{extractErrorMessage(updateStatus.error)}</p>
+      )}
     </div>
   );
 }

@@ -1,9 +1,10 @@
-import { api } from "@/lib/api";
-import { Category } from "@/lib/types";
+"use client";
+
+import { useCategoriesQuery } from "@/lib/queries/categories";
 import { ProductForm } from "@/components/products/ProductForm";
 
-export default async function NewProductPage() {
-  const categories = await api.get<Category[]>("/categories");
+export default function NewProductPage() {
+  const { data: categories = [] } = useCategoriesQuery();
 
   return (
     <div>

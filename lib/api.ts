@@ -1,3 +1,4 @@
+import axios, { AxiosError } from "axios";
 import { getToken } from "./session";
 
 const API_URL = process.env.API_URL ?? "http://localhost:4000/api";
@@ -10,55 +11,47 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(
-  path: string,
-  init?: RequestInit & { auth?: boolean }
-): Promise<T> {
-  const { auth = true, headers, ...rest } = init ?? {};
-  const finalHeaders: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(headers as Record<string, string>),
-  };
+/**
+ * Server-only axios client for the NestJS backend. Used exclusively from
+ * Route Handlers under app/api/* (the BFF layer) and from the login Server
+ * Action — never imported by Client Components, since that's where the
+ * admin JWT (read here from an httpOnly cookie) is attached.
+ */
+const http = axios.create({ baseURL: API_URL });
 
-  if (auth) {
-    const token = await getToken();
-    if (token) finalHeaders.Authorization = `Bearer ${token}`;
-  }
+http.interceptors.request.use(async (config) => {
+  const token = await getToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
-  const res = await fetch(`${API_URL}${path}`, {
-    ...rest,
-    headers: finalHeaders,
-    cache: "no-store",
-  });
-
-  const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
-
-  if (!res.ok) {
+function toApiError(error: unknown): ApiError {
+  if (error instanceof AxiosError) {
+    const data = error.response?.data as { message?: string | string[] } | undefined;
     const message = Array.isArray(data?.message)
       ? data.message.join(", ")
       : (data?.message ?? "Сталася помилка запиту");
-    throw new ApiError(res.status, message);
+    return new ApiError(error.response?.status ?? 500, message);
   }
+  return new ApiError(500, "Сталася помилка запиту");
+}
 
-  return data as T;
+async function request<T>(
+  method: "get" | "post" | "patch" | "delete",
+  path: string,
+  body?: unknown
+): Promise<T> {
+  try {
+    const res = await http.request<T>({ method, url: path, data: body });
+    return res.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
 }
 
 export const api = {
-  get: <T>(path: string, opts?: RequestInit & { auth?: boolean }) =>
-    request<T>(path, { ...opts, method: "GET" }),
-  post: <T>(path: string, body?: unknown, opts?: RequestInit & { auth?: boolean }) =>
-    request<T>(path, {
-      ...opts,
-      method: "POST",
-      body: body !== undefined ? JSON.stringify(body) : undefined,
-    }),
-  patch: <T>(path: string, body?: unknown, opts?: RequestInit & { auth?: boolean }) =>
-    request<T>(path, {
-      ...opts,
-      method: "PATCH",
-      body: body !== undefined ? JSON.stringify(body) : undefined,
-    }),
-  delete: <T>(path: string, opts?: RequestInit & { auth?: boolean }) =>
-    request<T>(path, { ...opts, method: "DELETE" }),
+  get: <T>(path: string) => request<T>("get", path),
+  post: <T>(path: string, body?: unknown) => request<T>("post", path, body),
+  patch: <T>(path: string, body?: unknown) => request<T>("patch", path, body),
+  delete: <T>(path: string) => request<T>("delete", path),
 };

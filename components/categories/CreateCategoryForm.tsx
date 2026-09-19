@@ -1,16 +1,32 @@
 "use client";
 
-import { useActionState } from "react";
+import { FormEvent } from "react";
 import { LuPlus } from "react-icons/lu";
-import { createCategoryAction } from "@/lib/actions/categories";
+import { useCreateCategoryMutation } from "@/lib/queries/categories";
+import { extractErrorMessage } from "@/lib/http";
+import { slugify } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { inputClass } from "@/components/ui/Field";
 
 export function CreateCategoryForm() {
-  const [state, formAction, pending] = useActionState(createCategoryAction, undefined);
+  const createCategory = useCreateCategoryMutation();
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const name = String(formData.get("name") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
+    if (!name) return;
+
+    createCategory.mutate(
+      { name, slug: slugify(name), description: description || undefined },
+      { onSuccess: () => form.reset() }
+    );
+  }
 
   return (
-    <form action={formAction} className="flex flex-wrap items-end gap-3">
+    <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-3">
       <div className="flex-1 min-w-[200px]">
         <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-ink">
           Назва категорії
@@ -26,11 +42,15 @@ export function CreateCategoryForm() {
         </label>
         <input id="description" name="description" className={inputClass} />
       </div>
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" disabled={createCategory.isPending}>
         <LuPlus size={16} />
         Додати категорію
       </Button>
-      {state?.error && <p className="w-full text-sm text-danger">{state.error}</p>}
+      {createCategory.isError && (
+        <p className="w-full text-sm text-danger">
+          {extractErrorMessage(createCategory.error)}
+        </p>
+      )}
     </form>
   );
 }

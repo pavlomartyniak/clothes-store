@@ -1,19 +1,21 @@
 "use client";
 
-import { useActionState, useTransition } from "react";
+import { FormEvent } from "react";
 import { LuPlus, LuTrash2, LuX } from "react-icons/lu";
 import { Category } from "@/lib/types";
 import {
-  addSubcategoryAction,
-  deleteCategoryAction,
-  removeSubcategoryAction,
-} from "@/lib/actions/categories";
+  useAddSubcategoryMutation,
+  useDeleteCategoryMutation,
+  useRemoveSubcategoryMutation,
+} from "@/lib/queries/categories";
+import { extractErrorMessage } from "@/lib/http";
+import { slugify } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 
 export function CategoryCard({ category }: { category: Category }) {
-  const addAction = addSubcategoryAction.bind(null, category._id);
-  const [state, formAction, pending] = useActionState(addAction, undefined);
-  const [isDeleting, startDelete] = useTransition();
+  const addSubcategory = useAddSubcategoryMutation();
+  const deleteCategory = useDeleteCategoryMutation();
+  const removeSubcategory = useRemoveSubcategoryMutation();
 
   function handleDeleteCategory() {
     if (
@@ -22,7 +24,18 @@ export function CategoryCard({ category }: { category: Category }) {
       )
     )
       return;
-    startDelete(() => deleteCategoryAction(category._id));
+    deleteCategory.mutate(category._id);
+  }
+
+  function handleAddSubcategory(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const name = String(new FormData(form).get("name") ?? "").trim();
+    if (!name) return;
+    addSubcategory.mutate(
+      { categoryId: category._id, name, slug: slugify(name) },
+      { onSuccess: () => form.reset() }
+    );
   }
 
   return (
@@ -37,7 +50,7 @@ export function CategoryCard({ category }: { category: Category }) {
         <button
           type="button"
           onClick={handleDeleteCategory}
-          disabled={isDeleting}
+          disabled={deleteCategory.isPending}
           aria-label="Видалити категорію"
           className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-soft hover:bg-red-50 hover:text-danger"
         >
@@ -52,7 +65,9 @@ export function CategoryCard({ category }: { category: Category }) {
             <button
               type="button"
               aria-label={`Видалити підкатегорію ${sub.name}`}
-              onClick={() => removeSubcategoryAction(category._id, sub._id)}
+              onClick={() =>
+                removeSubcategory.mutate({ categoryId: category._id, subcategoryId: sub._id })
+              }
               className="flex h-4 w-4 items-center justify-center rounded-full hover:bg-ink/10"
             >
               <LuX size={11} />
@@ -64,7 +79,7 @@ export function CategoryCard({ category }: { category: Category }) {
         )}
       </div>
 
-      <form action={formAction} className="mt-4 flex items-center gap-2">
+      <form onSubmit={handleAddSubcategory} className="mt-4 flex items-center gap-2">
         <input
           name="name"
           placeholder="Нова підкатегорія"
@@ -72,14 +87,16 @@ export function CategoryCard({ category }: { category: Category }) {
         />
         <button
           type="submit"
-          disabled={pending}
+          disabled={addSubcategory.isPending}
           aria-label="Додати підкатегорію"
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line text-ink-soft hover:border-ink hover:text-ink"
         >
           <LuPlus size={16} />
         </button>
       </form>
-      {state?.error && <p className="mt-2 text-sm text-danger">{state.error}</p>}
+      {addSubcategory.isError && (
+        <p className="mt-2 text-sm text-danger">{extractErrorMessage(addSubcategory.error)}</p>
+      )}
     </div>
   );
 }

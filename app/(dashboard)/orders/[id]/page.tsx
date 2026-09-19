@@ -1,6 +1,9 @@
+"use client";
+
+import { use } from "react";
 import Link from "next/link";
 import { LuArrowLeft } from "react-icons/lu";
-import { api } from "@/lib/api";
+import { useOrderQuery } from "@/lib/queries/orders";
 import { Order } from "@/lib/types";
 import { formatDate, formatPrice } from "@/lib/utils";
 import { OrderStatusSelect } from "@/components/orders/OrderStatusSelect";
@@ -16,13 +19,17 @@ const PAYMENT_LABELS: Record<Order["paymentMethod"], string> = {
   card: "Оплата карткою онлайн",
 };
 
-export default async function OrderDetailPage({
+export default function OrderDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  const order = await api.get<Order>(`/orders/${id}`);
+  const { id } = use(params);
+  const { data: order, isLoading } = useOrderQuery(id);
+
+  if (isLoading || !order) {
+    return <p className="text-sm text-ink-soft">Завантаження...</p>;
+  }
 
   return (
     <div className="max-w-3xl">

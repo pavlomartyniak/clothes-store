@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 import { LuPlus, LuTrash2 } from "react-icons/lu";
 import { Category, Product, ProductColor } from "@/lib/types";
 import { slugify } from "@/lib/utils";
+import { extractErrorMessage } from "@/lib/http";
 import { Button } from "@/components/ui/Button";
 import { Field, inputClass, textareaClass } from "@/components/ui/Field";
 import {
-  createProductAction,
-  updateProductAction,
+  useCreateProductMutation,
+  useUpdateProductMutation,
   ProductInput,
-} from "@/lib/actions/products";
+} from "@/lib/queries/products";
 
 function categoryId(product?: Product) {
   if (!product) return "";
@@ -43,8 +44,9 @@ export function ProductForm({
   const [isNew, setIsNew] = useState(product?.isNew ?? false);
   const [isBestseller, setIsBestseller] = useState(product?.isBestseller ?? false);
 
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
+  const createProduct = useCreateProductMutation();
+  const updateProduct = useUpdateProductMutation(product?._id ?? "");
+  const mutation = isEdit ? updateProduct : createProduct;
 
   const selectedCategory = useMemo(
     () => categories.find((c) => c._id === categoryIdValue),
@@ -65,16 +67,18 @@ export function ProductForm({
     setColors((prev) => prev.filter((_, i) => i !== index));
   }
 
+  const [validationError, setValidationError] = useState<string | null>(null);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
+    setValidationError(null);
 
     if (!categoryIdValue) {
-      setError("Оберіть категорію");
+      setValidationError("Оберіть категорію");
       return;
     }
     if (!subcategory) {
-      setError("Оберіть підкатегорію");
+      setValidationError("Оберіть підкатегорію");
       return;
     }
 
@@ -93,18 +97,15 @@ export function ProductForm({
       isBestseller,
     };
 
-    setPending(true);
-    const result = isEdit
-      ? await updateProductAction(product!._id, payload)
-      : await createProductAction(payload);
-    setPending(false);
-
-    if (result.error) {
-      setError(result.error);
-      return;
+    try {
+      await mutation.mutateAsync(payload);
+      router.push("/products");
+    } catch {
+      // surfaced below via mutation.error
     }
-    router.push("/products");
   }
+
+  const error = validationError || (mutation.isError ? extractErrorMessage(mutation.error) : null);
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
@@ -275,8 +276,8 @@ export function ProductForm({
       )}
 
       <div className="flex gap-3">
-        <Button type="submit" disabled={pending}>
-          {pending ? "Збереження..." : isEdit ? "Зберегти зміни" : "Створити товар"}
+        <Button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending ? "Збереження..." : isEdit ? "Зберегти зміни" : "Створити товар"}
         </Button>
         <Button type="button" variant="secondary" onClick={() => router.push("/products")}>
           Скасувати

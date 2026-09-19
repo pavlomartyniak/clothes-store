@@ -1,14 +1,15 @@
+"use client";
+
 import { LuPackage, LuTags, LuShoppingBag, LuClock } from "react-icons/lu";
-import { api } from "@/lib/api";
-import { Category, Order, Product } from "@/lib/types";
+import { useProductsQuery } from "@/lib/queries/products";
+import { useCategoriesQuery } from "@/lib/queries/categories";
+import { useOrdersQuery } from "@/lib/queries/orders";
 import { formatPrice } from "@/lib/utils";
 
-export default async function DashboardPage() {
-  const [products, categories, orders] = await Promise.all([
-    api.get<Product[]>("/products"),
-    api.get<Category[]>("/categories"),
-    api.get<Order[]>("/orders"),
-  ]);
+export default function DashboardPage() {
+  const { data: products = [] } = useProductsQuery();
+  const { data: categories = [] } = useCategoriesQuery();
+  const { data: orders = [] } = useOrdersQuery();
 
   const newOrders = orders.filter((o) => o.status === "new").length;
   const revenue = orders
