@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,11 +8,16 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductsService } from './products.service.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
+import { RemoveImageDto } from './dto/remove-image.dto.js';
 import { Public } from '../common/decorators/public.decorator.js';
+import { imageUploadOptions } from '../common/multer.config.js';
 
 @Controller('products')
 export class ProductsController {
@@ -52,5 +58,20 @@ export class ProductsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(id);
+  }
+
+  @Post(':id/images')
+  @UseInterceptors(FileInterceptor('file', imageUploadOptions))
+  uploadImage(
+    @Param('id') id: string,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    if (!file) throw new BadRequestException('Файл не надано');
+    return this.productsService.addImage(id, `/uploads/${file.filename}`);
+  }
+
+  @Delete(':id/images')
+  removeImage(@Param('id') id: string, @Body() dto: RemoveImageDto) {
+    return this.productsService.removeImage(id, dto.path);
   }
 }

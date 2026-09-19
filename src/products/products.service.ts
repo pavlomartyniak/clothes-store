@@ -1,9 +1,12 @@
+import { basename, join } from 'node:path';
+import { unlink } from 'node:fs/promises';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryFilter } from 'mongoose';
 import { Product, ProductDocument } from './schemas/product.schema.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
+import { uploadsDir } from '../common/uploads-path.js';
 
 export type ProductFilters = {
   category?: string;
@@ -66,6 +69,33 @@ export class ProductsService {
   async remove(id: string) {
     const product = await this.productModel.findByIdAndDelete(id).exec();
     if (!product) throw new NotFoundException('Товар не знайдено');
+    return product;
+  }
+
+  async addImage(id: string, imagePath: string) {
+    const product = await this.productModel
+      .findByIdAndUpdate(id, { $push: { images: imagePath } }, { new: true })
+      .populate('category', 'name slug')
+      .exec();
+    if (!product) throw new NotFoundException('Товар не знайдено');
+    return product;
+  }
+
+  async removeImage(id: string, imagePath: string) {
+    const product = await this.productModel
+      .findByIdAndUpdate(id, { $pull: { images: imagePath } }, { new: true })
+      .populate('category', 'name slug')
+      .exec();
+    if (!product) throw new NotFoundException('Товар не знайдено');
+
+    // Best-effort cleanup; basename() keeps this confined to uploadsDir
+    // regardless of what the caller sent as the stored path.
+    try {
+      await unlink(join(uploadsDir, basename(imagePath)));
+    } catch {
+      // file already gone — nothing to clean up
+    }
+
     return product;
   }
 }
