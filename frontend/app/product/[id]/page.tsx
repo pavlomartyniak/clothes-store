@@ -7,6 +7,8 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { ProductViewer } from "@/components/product/ProductViewer";
 import { Reveal } from "@/components/motion/Reveal";
 
+export const revalidate = 60;
+
 export async function generateMetadata({
   params,
 }: {
