@@ -59,7 +59,7 @@ function ProductsPageContent() {
                         {product.images[0] ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            src={getAssetUrl(product.images[0])}
+                            src={getAssetUrl(product.images[0].url)}
                             alt=""
                             className="h-full w-full object-cover"
                           />

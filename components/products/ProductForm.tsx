@@ -18,6 +18,7 @@ import {
 function categoryId(product?: Product) {
   if (!product) return "";
   const category = product.category;
+  if (!category) return "";
   return typeof category === "string" ? category : category._id;
 }
 
@@ -78,16 +79,12 @@ export function ProductForm({
       setValidationError("Оберіть категорію");
       return;
     }
-    if (!subcategory) {
-      setValidationError("Оберіть підкатегорію");
-      return;
-    }
 
     const payload: ProductInput = {
       name: name.trim(),
       slug: product?.slug ?? slugify(name).replace(/\s+/g, "-"),
       category: categoryIdValue,
-      subcategory,
+      subcategory: subcategory || undefined,
       price: Number(price),
       oldPrice: oldPrice ? Number(oldPrice) : undefined,
       description: description.trim(),
@@ -143,16 +140,15 @@ export function ProductForm({
             ))}
           </select>
         </Field>
-        <Field label="Підкатегорія" htmlFor="subcategory">
+        <Field label="Підкатегорія (необовʼязково)" htmlFor="subcategory">
           <select
             id="subcategory"
             value={subcategory}
             onChange={(e) => setSubcategory(e.target.value)}
-            required
             disabled={!selectedCategory}
             className={inputClass}
           >
-            <option value="">Оберіть підкатегорію</option>
+            <option value="">Без підкатегорії</option>
             {selectedCategory?.subcategories.map((sub) => (
               <option key={sub._id} value={sub.name}>
                 {sub.name}

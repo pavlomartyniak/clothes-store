@@ -8,13 +8,14 @@ import {
 } from "@/lib/queries/products";
 import { extractErrorMessage } from "@/lib/http";
 import { getAssetUrl } from "@/lib/assets";
+import { ProductImage } from "@/lib/types";
 
 export function ProductImageManager({
   productId,
   images,
 }: {
   productId: string;
-  images: string[];
+  images: ProductImage[];
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const upload = useUploadProductImageMutation(productId);
@@ -30,20 +31,20 @@ export function ProductImageManager({
     <div>
       <p className="mb-2 block text-sm font-medium text-ink">Фото товару</p>
       <div className="flex flex-wrap gap-3">
-        {images.map((path) => (
+        {images.map((image) => (
           <div
-            key={path}
+            key={image.publicId}
             className="group relative h-24 w-20 shrink-0 overflow-hidden rounded-lg border border-line"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={getAssetUrl(path)}
+              src={getAssetUrl(image.url)}
               alt=""
               className="h-full w-full object-cover"
             />
             <button
               type="button"
-              onClick={() => remove.mutate(path)}
+              onClick={() => remove.mutate(image.publicId)}
               disabled={remove.isPending}
               aria-label="Видалити фото"
               className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-ink/70 text-paper opacity-0 transition-opacity group-hover:opacity-100"

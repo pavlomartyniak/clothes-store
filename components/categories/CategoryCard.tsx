@@ -18,12 +18,7 @@ export function CategoryCard({ category }: { category: Category }) {
   const removeSubcategory = useRemoveSubcategoryMutation();
 
   function handleDeleteCategory() {
-    if (
-      !confirm(
-        `Видалити категорію "${category.name}"? Товари з цією категорією залишаться, але без звʼязку.`
-      )
-    )
-      return;
+    if (!confirm(`Видалити категорію "${category.name}"?`)) return;
     deleteCategory.mutate(category._id);
   }
 
@@ -96,6 +91,9 @@ export function CategoryCard({ category }: { category: Category }) {
       </form>
       {addSubcategory.isError && (
         <p className="mt-2 text-sm text-danger">{extractErrorMessage(addSubcategory.error)}</p>
+      )}
+      {deleteCategory.isError && (
+        <p className="mt-2 text-sm text-danger">{extractErrorMessage(deleteCategory.error)}</p>
       )}
     </div>
   );

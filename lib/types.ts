@@ -17,19 +17,24 @@ export type ProductColor = {
   hex: string;
 };
 
+export type ProductImage = {
+  url: string;
+  publicId: string;
+};
+
 export type Product = {
   _id: string;
   name: string;
   slug: string;
-  category: Category | string;
-  subcategory: string;
+  category: Category | string | null;
+  subcategory?: string;
   price: number;
   oldPrice?: number;
   description: string;
   details: string[];
   sizes: string[];
   colors: ProductColor[];
-  images: string[];
+  images: ProductImage[];
   isNew: boolean;
   isBestseller: boolean;
   createdAt: string;

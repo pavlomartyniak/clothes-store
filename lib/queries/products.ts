@@ -14,7 +14,7 @@ export type ProductInput = {
   name: string;
   slug: string;
   category: string;
-  subcategory: string;
+  subcategory?: string;
   price: number;
   oldPrice?: number;
   description: string;
@@ -104,9 +104,9 @@ export function useUploadProductImageMutation(productId: string) {
 export function useRemoveProductImageMutation(productId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (path: string) => {
+    mutationFn: async (publicId: string) => {
       const res = await http.delete<Product>(`/products/${productId}/images`, {
-        data: { path },
+        data: { publicId },
       });
       return res.data;
     },
