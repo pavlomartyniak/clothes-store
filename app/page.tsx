@@ -5,6 +5,8 @@ import { ValueProps } from "@/components/sections/ValueProps";
 import { Newsletter } from "@/components/sections/Newsletter";
 import { getCategories, getProducts } from "@/lib/products";
 
+export const revalidate = 60;
+
 export default async function Home() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
 

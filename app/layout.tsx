@@ -19,6 +19,8 @@ const displayFont = Playfair_Display({
   subsets: ["latin", "cyrillic"],
 });
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "SILUET — сучасний одяг для щоденного стилю",
   description:

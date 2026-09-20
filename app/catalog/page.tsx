@@ -20,6 +20,8 @@ export const metadata = {
   title: "Каталог — SILUET",
 };
 
+export const revalidate = 60;
+
 export default async function CatalogPage({
   searchParams,
 }: {
