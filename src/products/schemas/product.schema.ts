@@ -12,6 +12,18 @@ export class ProductColor {
 
 export const ProductColorSchema = SchemaFactory.createForClass(ProductColor);
 
+@Schema({ _id: false })
+export class ProductImage {
+  @Prop({ required: true })
+  url: string;
+
+  /** Cloudinary's asset id — required to delete the file later. */
+  @Prop({ required: true })
+  publicId: string;
+}
+
+export const ProductImageSchema = SchemaFactory.createForClass(ProductImage);
+
 export type ProductDocument = HydratedDocument<Product>;
 
 @Schema({ timestamps: true })
@@ -25,8 +37,8 @@ export class Product {
   @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
   category: Types.ObjectId;
 
-  @Prop({ required: true, trim: true })
-  subcategory: string;
+  @Prop({ trim: true })
+  subcategory?: string;
 
   @Prop({ required: true, min: 0 })
   price: number;
@@ -46,8 +58,8 @@ export class Product {
   @Prop({ type: [ProductColorSchema], default: [] })
   colors: ProductColor[];
 
-  @Prop({ type: [String], default: [] })
-  images: string[];
+  @Prop({ type: [ProductImageSchema], default: [] })
+  images: ProductImage[];
 
   @Prop({ default: false })
   isNew: boolean;

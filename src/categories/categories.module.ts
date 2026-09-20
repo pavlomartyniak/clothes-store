@@ -3,10 +3,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CategoriesService } from './categories.service.js';
 import { CategoriesController } from './categories.controller.js';
 import { Category, CategorySchema } from './schemas/category.schema.js';
+import { Product, ProductSchema } from '../products/schemas/product.schema.js';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Category.name, schema: CategorySchema }]),
+    MongooseModule.forFeature([
+      { name: Category.name, schema: CategorySchema },
+      { name: Product.name, schema: ProductSchema },
+    ]),
   ],
   controllers: [CategoriesController],
   providers: [CategoriesService],

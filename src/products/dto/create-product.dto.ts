@@ -28,8 +28,9 @@ export class CreateProductDto {
   @IsMongoId()
   category: string;
 
+  @IsOptional()
   @IsString()
-  subcategory: string;
+  subcategory?: string;
 
   @IsNumber()
   @Min(0)
@@ -58,11 +59,6 @@ export class CreateProductDto {
   @ValidateNested({ each: true })
   @Type(() => ProductColorDto)
   colors?: ProductColorDto[];
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  images?: string[];
 
   @IsOptional()
   @IsBoolean()

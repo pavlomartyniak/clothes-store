@@ -18,10 +18,14 @@ import { UpdateProductDto } from './dto/update-product.dto.js';
 import { RemoveImageDto } from './dto/remove-image.dto.js';
 import { Public } from '../common/decorators/public.decorator.js';
 import { imageUploadOptions } from '../common/multer.config.js';
+import { CloudinaryService } from '../cloudinary/cloudinary.service.js';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Public()
   @Get()
@@ -62,16 +66,21 @@ export class ProductsController {
 
   @Post(':id/images')
   @UseInterceptors(FileInterceptor('file', imageUploadOptions))
-  uploadImage(
+  async uploadImage(
     @Param('id') id: string,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('Файл не надано');
-    return this.productsService.addImage(id, `/uploads/${file.filename}`);
+    const result = await this.cloudinaryService.uploadImage(file.buffer);
+    return this.productsService.addImage(id, {
+      url: result.secure_url,
+      publicId: result.public_id,
+    });
   }
 
   @Delete(':id/images')
-  removeImage(@Param('id') id: string, @Body() dto: RemoveImageDto) {
-    return this.productsService.removeImage(id, dto.path);
+  async removeImage(@Param('id') id: string, @Body() dto: RemoveImageDto) {
+    await this.cloudinaryService.deleteImage(dto.publicId);
+    return this.productsService.removeImage(id, dto.publicId);
   }
 }

@@ -1,18 +1,12 @@
-import { randomUUID } from 'node:crypto';
-import { extname } from 'node:path';
 import { BadRequestException } from '@nestjs/common';
-import { diskStorage } from 'multer';
-import { uploadsDir } from './uploads-path.js';
+import { memoryStorage } from 'multer';
 
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
+// Files land in memory (file.buffer) instead of disk — they're forwarded
+// straight to Cloudinary and never touch this server's filesystem.
 export const imageUploadOptions = {
-  storage: diskStorage({
-    destination: uploadsDir,
-    filename: (_req, file, callback) => {
-      callback(null, `${randomUUID()}${extname(file.originalname)}`);
-    },
-  }),
+  storage: memoryStorage(),
   fileFilter: (
     _req: unknown,
     file: Express.Multer.File,

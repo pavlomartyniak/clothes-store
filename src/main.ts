@@ -1,14 +1,10 @@
-import { mkdirSync } from 'node:fs';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module.js';
-import { uploadsDir } from './common/uploads-path.js';
 
 async function bootstrap() {
-  mkdirSync(uploadsDir, { recursive: true });
-
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const config = app.get(ConfigService);
 
@@ -16,10 +12,6 @@ async function bootstrap() {
     origin: config.get<string>('CORS_ORIGIN')?.split(',') ?? true,
     credentials: true,
   });
-
-  // Served outside the /api prefix — these are static files, not API
-  // responses, and image tags aren't subject to CORS anyway.
-  app.useStaticAssets(uploadsDir, { prefix: '/uploads' });
 
   app.useGlobalPipes(
     new ValidationPipe({
