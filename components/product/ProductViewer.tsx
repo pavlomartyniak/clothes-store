@@ -18,7 +18,7 @@ export function ProductViewer({ product }: { product: Product }) {
         onSelect={setActiveColorIndex}
       />
 
-      <div className="flex flex-col">
+      <div className="flex min-w-0 flex-col">
         {product.subcategory && (
           <p className="text-xs uppercase tracking-widest text-ink-soft">
             {product.subcategory}
@@ -60,7 +60,7 @@ export function ProductViewer({ product }: { product: Product }) {
           <summary className="cursor-pointer font-medium text-ink">Доставка та повернення</summary>
           <p className="mt-3 text-ink-soft">
             Відправляємо протягом 1 робочого дня. Доставка Новою поштою 1–3 дні.
-            Обмін або повернення можливі протягом 14 днів з моменту отримання.
+            Огляд і примірка можливі при отриманні на відділенні.
           </p>
         </details>
       </div>

@@ -37,17 +37,17 @@ export default async function ProductPage({
 
   return (
     <div className="container-page py-8 sm:py-12">
-      <nav className="mb-6 flex items-center gap-1.5 text-xs text-ink-soft">
-        <Link href="/" className="hover:text-ink">Головна</Link>
-        <LuChevronRight size={12} />
+      <nav className="mb-6 flex items-center gap-1.5 overflow-hidden text-xs text-ink-soft">
+        <Link href="/" className="shrink-0 hover:text-ink">Головна</Link>
+        <LuChevronRight size={12} className="shrink-0" />
         <Link
           href={`/catalog?category=${encodeURIComponent(categorySlug(product.category))}`}
-          className="hover:text-ink"
+          className="shrink-0 hover:text-ink"
         >
           {categoryName(product.category)}
         </Link>
-        <LuChevronRight size={12} />
-        <span className="text-ink">{product.name}</span>
+        <LuChevronRight size={12} className="shrink-0" />
+        <span className="min-w-0 flex-1 truncate text-ink">{product.name}</span>
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
