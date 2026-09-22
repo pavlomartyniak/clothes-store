@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LuChevronLeft, LuChevronRight, LuExpand, LuX } from "react-icons/lu";
 import { Product } from "@/lib/types";
@@ -21,6 +21,7 @@ export function ProductGallery({
   onSelect: (index: number) => void;
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const touchStartX = useRef<number | null>(null);
   const hasPhotos = product.images.length > 0;
 
   // Real photos aren't tied to a color, so the gallery keeps its own index
@@ -73,11 +74,11 @@ export function ProductGallery({
   }, [lightboxOpen, index]);
 
   return (
-    <div>
+    <div className="min-w-0">
       <button
         type="button"
         onClick={() => setLightboxOpen(true)}
-        className="group relative block aspect-3/4 w-full overflow-hidden rounded-3xl"
+        className="group relative block aspect-4/5 w-full overflow-hidden rounded-3xl sm:aspect-3/4"
         aria-label="Переглянути фото на весь екран"
       >
         {renderPhoto(index, "h-full w-full", true)}
@@ -91,7 +92,7 @@ export function ProductGallery({
       </button>
 
       {count > 1 && (
-        <div className="mt-4 flex gap-3">
+        <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
           {Array.from({ length: count }, (_, i) => (
             <button
               key={hasPhotos ? product.images[i].publicId : product.colors[i].name}
@@ -122,7 +123,7 @@ export function ProductGallery({
             <button
               type="button"
               aria-label="Закрити перегляд"
-              className="absolute right-5 top-5 text-paper transition-opacity hover:opacity-70"
+              className="absolute right-5 top-5 z-10 text-paper transition-opacity hover:opacity-70"
               onClick={() => setLightboxOpen(false)}
             >
               <LuX size={28} />
@@ -133,7 +134,7 @@ export function ProductGallery({
                 <button
                   type="button"
                   aria-label="Попереднє фото"
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-paper transition-opacity hover:opacity-70 sm:left-8"
+                  className="absolute left-4 top-1/2 z-10 -translate-y-1/2 p-2 text-paper transition-opacity hover:opacity-70 sm:left-8"
                   onClick={(e) => {
                     e.stopPropagation();
                     prev();
@@ -144,7 +145,7 @@ export function ProductGallery({
                 <button
                   type="button"
                   aria-label="Наступне фото"
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-paper transition-opacity hover:opacity-70 sm:right-8"
+                  className="absolute right-4 top-1/2 z-10 -translate-y-1/2 p-2 text-paper transition-opacity hover:opacity-70 sm:right-8"
                   onClick={(e) => {
                     e.stopPropagation();
                     next();
@@ -163,6 +164,18 @@ export function ProductGallery({
               transition={{ duration: 0.2 }}
               className="relative aspect-3/4 h-full max-h-[80vh] w-auto max-w-full overflow-hidden rounded-2xl"
               onClick={(e) => e.stopPropagation()}
+              onTouchStart={(e) => {
+                touchStartX.current = e.touches[0].clientX;
+              }}
+              onTouchEnd={(e) => {
+                if (touchStartX.current === null || count <= 1) return;
+                const delta = e.changedTouches[0].clientX - touchStartX.current;
+                if (Math.abs(delta) > 40) {
+                  if (delta < 0) next();
+                  else prev();
+                }
+                touchStartX.current = null;
+              }}
             >
               {renderPhoto(index, "h-full w-full")}
             </motion.div>

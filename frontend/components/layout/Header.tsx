@@ -29,8 +29,8 @@ export function Header({ categories }: { categories: Category[] }) {
           <div className="animate-marquee flex w-max gap-16 py-2 text-[11px] uppercase tracking-widest">
             {Array.from({ length: 2 }).map((_, i) => (
               <div key={i} className="flex gap-16">
-                <span>Безкоштовна доставка від 2000 грн</span>
-                <span>Обмін та повернення протягом 14 днів</span>
+                <span>Доставка по всій Україні Новою Поштою</span>
+                <span>Огляд і примірка при отриманні на пошті</span>
                 <span>Нова колекція вже в каталозі</span>
               </div>
             ))}
