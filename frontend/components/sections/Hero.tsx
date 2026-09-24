@@ -1,6 +1,6 @@
+import Image from "next/image";
 import { LuArrowRight } from "react-icons/lu";
 import { LinkButton } from "@/components/ui/Button";
-import { ProductPhoto } from "@/components/product/ProductPhoto";
 import { Product } from "@/lib/types";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -17,11 +17,16 @@ export function Hero({ products }: { products: Product[] }) {
   return (
     <section className="container-page grid gap-4 pt-8 sm:pt-12 lg:grid-cols-[1.3fr_1fr] lg:gap-6">
       <div className="relative flex flex-col justify-end overflow-hidden rounded-3xl bg-paper-soft p-8 sm:p-12 lg:min-h-[560px]">
-        <ProductPhoto
-          product={featured}
-          priority
-          className="absolute inset-0 h-full w-full"
-        />
+        <div className="absolute inset-0 h-full w-full overflow-hidden">
+          <Image
+            src="/images/sweater.jpg"
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1024px) 55vw, 100vw"
+            className="object-cover"
+          />
+        </div>
         <div className="absolute inset-0 bg-linear-to-t from-ink/70 via-ink/10 to-transparent" />
         <Reveal className="relative max-w-md space-y-5 text-paper">
           <span className="text-xs uppercase tracking-[0.3em] text-paper/80">
@@ -48,10 +53,15 @@ export function Hero({ products }: { products: Product[] }) {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
         <div className="relative flex flex-col justify-end overflow-hidden rounded-3xl p-6 sm:min-h-[268px]">
-          <ProductPhoto
-            product={secondary}
-            className="absolute inset-0 h-full w-full"
-          />
+          <div className="absolute inset-0 h-full w-full overflow-hidden">
+            <Image
+              src="/images/jacket.jpg"
+              alt=""
+              fill
+              sizes="(min-width: 1024px) 25vw, 50vw"
+              className="object-cover"
+            />
+          </div>
           <div className="absolute inset-0 bg-linear-to-t from-ink/70 via-transparent to-transparent" />
           <div className="relative space-y-2 text-paper">
             <span className="text-xs uppercase tracking-widest text-paper/80">
