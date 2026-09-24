@@ -22,6 +22,8 @@ export function ProductGallery({
 }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
+  const mainTouchStartX = useRef<number | null>(null);
+  const didSwipeMain = useRef(false);
   const hasPhotos = product.images.length > 0;
 
   // Real photos aren't tied to a color, so the gallery keeps its own index
@@ -77,11 +79,41 @@ export function ProductGallery({
     <div className="min-w-0">
       <button
         type="button"
-        onClick={() => setLightboxOpen(true)}
+        onClick={() => {
+          if (didSwipeMain.current) {
+            didSwipeMain.current = false;
+            return;
+          }
+          setLightboxOpen(true);
+        }}
+        onTouchStart={(e) => {
+          mainTouchStartX.current = e.touches[0].clientX;
+        }}
+        onTouchEnd={(e) => {
+          if (mainTouchStartX.current === null || count <= 1) return;
+          const delta = e.changedTouches[0].clientX - mainTouchStartX.current;
+          if (Math.abs(delta) > 40) {
+            didSwipeMain.current = true;
+            if (delta < 0) next();
+            else prev();
+          }
+          mainTouchStartX.current = null;
+        }}
         className="group relative block aspect-4/5 w-full overflow-hidden rounded-3xl sm:aspect-3/4"
         aria-label="Переглянути фото на весь екран"
       >
-        {renderPhoto(index, "h-full w-full", true)}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={index}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="h-full w-full"
+          >
+            {renderPhoto(index, "h-full w-full", true)}
+          </motion.div>
+        </AnimatePresence>
         <div className="absolute left-4 top-4 flex flex-col gap-2">
           {product.isNew && <Badge tone="ink">Новинка</Badge>}
           {product.oldPrice && <Badge tone="accent">Знижка</Badge>}
