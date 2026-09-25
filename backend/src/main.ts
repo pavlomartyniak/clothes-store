@@ -25,6 +25,6 @@ async function bootstrap() {
 
   const port = config.get<string>('PORT') ?? 4000;
   await app.listen(port);
-  console.log(`Siluet backend running on http://localhost:${port}/api`);
+  console.log(`Maison backend running on http://localhost:${port}/api`);
 }
 await bootstrap();

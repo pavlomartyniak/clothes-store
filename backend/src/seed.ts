@@ -61,7 +61,7 @@ async function seed() {
   const AdminUserModel = mongoose.model(AdminUser.name, AdminUserSchema);
   const CategoryModel = mongoose.model(Category.name, CategorySchema);
 
-  const adminEmail = (process.env.ADMIN_EMAIL ?? 'admin@siluet.ua').toLowerCase();
+  const adminEmail = (process.env.ADMIN_EMAIL ?? 'admin@maison.ua').toLowerCase();
   const adminPassword = process.env.ADMIN_PASSWORD ?? 'ChangeMe123!';
 
   const existingAdmin = await AdminUserModel.findOne({ email: adminEmail });
@@ -72,7 +72,7 @@ async function seed() {
     await AdminUserModel.create({
       email: adminEmail,
       passwordHash,
-      name: 'SILUET Admin',
+      name: 'Maison Admin',
     });
     console.log(`Created admin user: ${adminEmail}`);
   }

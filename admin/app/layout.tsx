@@ -9,8 +9,8 @@ const bodyFont = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SILUET Admin",
-  description: "Адмін-панель інтернет-магазину SILUET",
+  title: "Maison Admin",
+  description: "Адмін-панель інтернет-магазину Maison",
 };
 
 export default function RootLayout({

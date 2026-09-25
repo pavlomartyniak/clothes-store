@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Pinyon_Script, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
 import { ProductsProvider } from "@/lib/products-context";
@@ -19,12 +19,20 @@ const displayFont = Playfair_Display({
   subsets: ["latin", "cyrillic"],
 });
 
+// Used only for the "A" in the Maison wordmark (components/layout/Logo.tsx) —
+// Latin-only glyph, so no cyrillic subset needed.
+const scriptFont = Pinyon_Script({
+  variable: "--font-script",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "SILUET — сучасний одяг для щоденного стилю",
+  title: "Maison — сучасний одяг для щоденного стилю",
   description:
-    "SILUET — інтернет-магазин одягу для жінок, чоловіків та дітей. Якісні тканини, продумана посадка, швидка доставка по Україні.",
+    "Maison — інтернет-магазин одягу для жінок, чоловіків та дітей. Якісні тканини, продумана посадка, швидка доставка по Україні.",
 };
 
 export default async function RootLayout({
@@ -37,7 +45,7 @@ export default async function RootLayout({
   return (
     <html
       lang="uk"
-      className={`${bodyFont.variable} ${displayFont.variable} h-full antialiased`}
+      className={`${bodyFont.variable} ${displayFont.variable} ${scriptFont.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col font-sans" suppressHydrationWarning>

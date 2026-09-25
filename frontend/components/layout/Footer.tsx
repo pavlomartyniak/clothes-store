@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { LuInstagram, LuFacebook, LuMail, LuPhone } from "react-icons/lu";
 import { Category } from "@/lib/types";
+import { Logo } from "./Logo";
 
 export function Footer({ categories }: { categories: Category[] }) {
   return (
     <footer className="border-t border-line bg-paper-soft">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
-          <span className="font-display text-2xl text-ink">SILUET</span>
+          <span className="font-display text-2xl text-ink">
+            <Logo />
+          </span>
 
           <div className="flex gap-3 pt-1">
             <a
@@ -72,7 +75,7 @@ export function Footer({ categories }: { categories: Category[] }) {
               <LuPhone size={15} /> +380 (44) 123 45 67
             </li>
             <li className="flex items-center gap-2">
-              <LuMail size={15} /> hello@siluet.ua
+              <LuMail size={15} /> hello@maison.ua
             </li>
             <li>Київ, вул. Хрещатик, 1</li>
           </ul>
@@ -81,8 +84,8 @@ export function Footer({ categories }: { categories: Category[] }) {
 
       <div className="border-t border-line py-5">
         <div className="container-page flex flex-col items-center justify-between gap-2 text-xs text-ink-soft sm:flex-row">
-          <span>© {new Date().getFullYear()} SILUET. Усі права захищені.</span>
-          <span>Дизайн і розробка — власна команда SILUET</span>
+          <span>© {new Date().getFullYear()} Maison. Усі права захищені.</span>
+          <span>Дизайн і розробка — власна команда Maison</span>
         </div>
       </div>
     </footer>

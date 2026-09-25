@@ -26,7 +26,7 @@ export default function DashboardPage() {
   return (
     <div>
       <h1 className="font-semibold text-2xl text-ink">Огляд</h1>
-      <p className="mt-1 text-sm text-ink-soft">Загальний стан магазину SILUET</p>
+      <p className="mt-1 text-sm text-ink-soft">Загальний стан магазину Maison</p>
 
       <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map((stat) => (

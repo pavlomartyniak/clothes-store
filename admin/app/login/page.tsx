@@ -12,7 +12,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-paper-soft px-4">
       <div className="w-full max-w-sm rounded-2xl border border-line bg-paper p-8 shadow-sm">
         <h1 className="text-center font-semibold text-2xl tracking-tight text-ink">
-          SILUET Admin
+          Maison Admin
         </h1>
         <p className="mt-2 text-center text-sm text-ink-soft">
           Увійдіть, щоб керувати магазином

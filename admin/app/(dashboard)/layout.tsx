@@ -12,7 +12,7 @@ export default function DashboardLayout({
       <aside className="flex w-64 shrink-0 flex-col border-r border-line bg-paper-soft p-4">
         <div className="px-2 py-3">
           <span className="font-semibold text-lg tracking-tight text-ink">
-            SILUET
+            Maison
           </span>
           <span className="ml-1.5 text-xs text-ink-soft">admin</span>
         </div>

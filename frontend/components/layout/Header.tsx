@@ -8,6 +8,7 @@ import { LuMenu, LuSearch, LuShoppingBag, LuUser, LuX } from "react-icons/lu";
 import { useCart } from "@/lib/cart-context";
 import { Category } from "@/lib/types";
 import { useMounted } from "@/lib/use-mounted";
+import { Logo } from "./Logo";
 
 export function Header({ categories }: { categories: Category[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -48,7 +49,7 @@ export function Header({ categories }: { categories: Category[] }) {
           </button>
 
           <Link href="/" className="font-display text-2xl tracking-wide text-ink">
-            SILUET
+            <Logo />
           </Link>
 
           <nav className="hidden gap-8 lg:flex">
@@ -116,7 +117,9 @@ export function Header({ categories }: { categories: Category[] }) {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-display text-xl">SILUET</span>
+                    <span className="font-display text-xl">
+                      <Logo />
+                    </span>
                     <button aria-label="Закрити меню" onClick={() => setMenuOpen(false)}>
                       <LuX size={22} />
                     </button>
