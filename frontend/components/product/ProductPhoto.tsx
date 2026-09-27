@@ -3,6 +3,7 @@ import { LuShirt } from "react-icons/lu";
 import { Product } from "@/lib/types";
 import { getProductPalette } from "@/lib/color";
 import { getAssetUrl } from "@/lib/assets";
+import { optimizedImageUrl } from "@/lib/cloudinary";
 import { cn } from "@/lib/utils";
 
 export function ProductPhoto({
@@ -11,6 +12,7 @@ export function ProductPhoto({
   priority,
   palette,
   image,
+  alt,
 }: {
   product: Pick<Product, "name" | "colors" | "images">;
   className?: string;
@@ -18,6 +20,8 @@ export function ProductPhoto({
   palette?: [string, string];
   /** Override which uploaded photo to show; defaults to the product's first. */
   image?: string | null;
+  /** Defaults to the product name; pass a per-image alt in a multi-photo gallery. */
+  alt?: string;
 }) {
   const photo = image === undefined ? product.images[0]?.url : image;
 
@@ -25,8 +29,8 @@ export function ProductPhoto({
     return (
       <div className={cn("relative overflow-hidden", className)}>
         <Image
-          src={getAssetUrl(photo)}
-          alt={product.name}
+          src={optimizedImageUrl(getAssetUrl(photo))}
+          alt={alt ?? product.name}
           fill
           priority={priority}
           unoptimized

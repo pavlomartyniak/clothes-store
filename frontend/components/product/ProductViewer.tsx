@@ -5,6 +5,7 @@ import { Product } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
 import { ProductGallery } from "./ProductGallery";
 import { AddToCartPanel } from "./AddToCartPanel";
+import { Badge } from "@/components/ui/Badge";
 
 export function ProductViewer({ product }: { product: Product }) {
   const [activeColorIndex, setActiveColorIndex] = useState(0);
@@ -33,19 +34,26 @@ export function ProductViewer({ product }: { product: Product }) {
               {formatPrice(product.oldPrice)}
             </span>
           )}
+          {product.soldOut && <Badge tone="muted">Продано</Badge>}
         </div>
 
         <p className="mt-5 text-sm leading-relaxed text-ink-soft">{product.description}</p>
 
         <div className="mt-8 border-t border-line pt-8">
-          <AddToCartPanel
-            product={product}
-            color={activeColor.name}
-            onColorChange={(name) => {
-              const index = product.colors.findIndex((c) => c.name === name);
-              if (index !== -1) setActiveColorIndex(index);
-            }}
-          />
+          {product.soldOut ? (
+            <p className="text-sm text-ink-soft">
+              Цей товар зараз розпродано. Перегляньте схожі товари нижче.
+            </p>
+          ) : (
+            <AddToCartPanel
+              product={product}
+              color={activeColor.name}
+              onColorChange={(name) => {
+                const index = product.colors.findIndex((c) => c.name === name);
+                if (index !== -1) setActiveColorIndex(index);
+              }}
+            />
+          )}
         </div>
 
         <details className="mt-8 border-t border-line pt-6 text-sm">

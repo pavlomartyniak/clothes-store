@@ -40,6 +40,7 @@ export function ProductGallery({
         <ProductPhoto
           product={product}
           image={product.images[i].url}
+          alt={`${product.name} — фото ${i + 1}`}
           priority={priority}
           className={className}
         />
