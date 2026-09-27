@@ -23,8 +23,6 @@ const RETURN_POLICY = {
   applicableCountry: "UA",
 };
 
-// No itemCondition here deliberately — items aren't uniformly new, and the
-// site doesn't state condition on-page, so there's no accurate value to publish.
 export function productSchema(product: Product, url: string) {
   const brand = brandName(product.brand);
   return {

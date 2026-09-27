@@ -32,10 +32,13 @@ export async function generateMetadata({
   if (!brand) return {};
 
   return {
-    title: truncate(`${brand.name} оригінал купити в Україні — Martosoli`, 60),
+    title: truncate(
+      `${brand.name} 1:1 оригінал купити в Україні — Martosoli`,
+      60,
+    ),
     description: truncate(
-      `Оригінальні речі ${brand.name} в каталозі Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
-      160
+      `Оригінальні 1:1 речі ${brand.name} в каталозі Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+      160,
     ),
     alternates: { canonical: `${siteUrl}/brand/${slug}` },
   };
@@ -58,13 +61,19 @@ export default async function BrandPage({
         data={collectionPageSchema(
           brand.name,
           brandUrl,
-          matches.map((p) => `${siteUrl}/product/${encodeURIComponent(p.slug)}`)
+          matches.map(
+            (p) => `${siteUrl}/product/${encodeURIComponent(p.slug)}`,
+          ),
         )}
       />
       <nav className="mb-6 flex items-center gap-1.5 text-xs text-ink-soft">
-        <Link href="/" className="hover:text-ink">Головна</Link>
+        <Link href="/" className="hover:text-ink">
+          Головна
+        </Link>
         <LuChevronRight size={12} />
-        <Link href="/brands" className="hover:text-ink">Бренди</Link>
+        <Link href="/brands" className="hover:text-ink">
+          Бренди
+        </Link>
         <LuChevronRight size={12} />
         <span className="text-ink">{brand.name}</span>
       </nav>
@@ -82,8 +91,12 @@ export default async function BrandPage({
           </div>
         )}
         <div>
-          <span className="text-xs uppercase tracking-widest text-accent">Бренд</span>
-          <h1 className="mt-1 font-display text-3xl text-ink sm:text-4xl">{brand.name}</h1>
+          <span className="text-xs uppercase tracking-widest text-accent">
+            Бренд
+          </span>
+          <h1 className="mt-1 font-display text-3xl text-ink sm:text-4xl">
+            {brand.name}
+          </h1>
           <p className="mt-1 text-sm text-ink-soft">{matches.length} товарів</p>
         </div>
       </div>

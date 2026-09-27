@@ -40,19 +40,23 @@ export async function generateMetadata({
 
   const title = truncate(`${product.name} — Martosoli`, 60);
   const description = truncate(
-    `Оригінальний ${product.name} — купити в Україні за ${formatPrice(product.price)} в Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
-    160
+    `Оригінальний 1:1 ${product.name} — купити в Україні за ${formatPrice(product.price)} в Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+    160,
   );
   const image = product.images[0]?.url;
 
   return {
     title,
     description,
-    alternates: { canonical: `${siteUrl}/product/${encodeURIComponent(product.slug)}` },
+    alternates: {
+      canonical: `${siteUrl}/product/${encodeURIComponent(product.slug)}`,
+    },
     openGraph: {
       title,
       description,
-      images: image ? [{ url: ogImageUrl(image), width: 1200, height: 630 }] : undefined,
+      images: image
+        ? [{ url: ogImageUrl(image), width: 1200, height: 630 }]
+        : undefined,
     },
     other: {
       "product:price:amount": String(product.price),
@@ -71,9 +75,11 @@ export default async function ProductPage({
   const param = decodeURIComponent(rawSlug);
 
   const bySlug = await getProductBySlug(param);
-  const product = bySlug ?? (isMongoId(param) ? await getProductById(param) : undefined);
+  const product =
+    bySlug ?? (isMongoId(param) ? await getProductById(param) : undefined);
   if (!product) notFound();
-  if (!bySlug) permanentRedirect(`/product/${encodeURIComponent(product.slug)}`);
+  if (!bySlug)
+    permanentRedirect(`/product/${encodeURIComponent(product.slug)}`);
 
   const allProducts = await getProducts();
   const related = getRelatedProducts(product, allProducts, 8);
@@ -86,12 +92,17 @@ export default async function ProductPage({
       <JsonLd
         data={breadcrumbSchema([
           { name: "Головна", url: siteUrl },
-          { name: categoryName(product.category), url: `${siteUrl}/${categorySlugValue}` },
+          {
+            name: categoryName(product.category),
+            url: `${siteUrl}/${categorySlugValue}`,
+          },
           { name: product.name, url: productUrl },
         ])}
       />
       <nav className="mb-6 flex items-center gap-1.5 overflow-hidden text-xs text-ink-soft">
-        <Link href="/" className="shrink-0 hover:text-ink">Головна</Link>
+        <Link href="/" className="shrink-0 hover:text-ink">
+          Головна
+        </Link>
         <LuChevronRight size={12} className="shrink-0" />
         <Link
           href={`/${encodeURIComponent(categorySlugValue)}`}
@@ -109,7 +120,9 @@ export default async function ProductPage({
 
       {related.length > 0 && (
         <section className="mt-20 border-t border-line pt-12">
-          <h2 className="mb-8 font-display text-2xl text-ink">Вам також сподобається</h2>
+          <h2 className="mb-8 font-display text-2xl text-ink">
+            Вам також сподобається
+          </h2>
           <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
             {related.map((p, index) => (
               <Reveal key={p._id} delay={index * 0.06}>

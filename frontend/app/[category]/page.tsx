@@ -24,11 +24,14 @@ export async function generateMetadata({
   if (!category) return {};
 
   return {
-    title: truncate(`Брендові ${category.name.toLowerCase()} купити в Україні — Martosoli`, 60),
+    title: truncate(
+      `Брендові 1:1 ${category.name.toLowerCase()} купити в Україні — Martosoli`,
+      60,
+    ),
     description: truncate(
       category.description ??
-        `Оригінальні ${category.name.toLowerCase()} топових люксових брендів. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
-      160
+        `Оригінальні 1:1 ${category.name.toLowerCase()} топових люксових брендів. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+      160,
     ),
     alternates: { canonical: `${siteUrl}/${slug}` },
   };
@@ -41,7 +44,10 @@ export default async function CategoryPage({
 }) {
   const { category: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
-  const [categories, products] = await Promise.all([getCategories(), getProducts()]);
+  const [categories, products] = await Promise.all([
+    getCategories(),
+    getProducts(),
+  ]);
   const category = categories.find((c) => c.slug === slug);
   if (!category) notFound();
 
@@ -54,19 +60,25 @@ export default async function CategoryPage({
         data={collectionPageSchema(
           category.name,
           categoryUrl,
-          list.map((p) => `${siteUrl}/product/${encodeURIComponent(p.slug)}`)
+          list.map((p) => `${siteUrl}/product/${encodeURIComponent(p.slug)}`),
         )}
       />
       <nav className="mb-6 flex items-center gap-1.5 text-xs text-ink-soft">
-        <Link href="/" className="hover:text-ink">Головна</Link>
+        <Link href="/" className="hover:text-ink">
+          Головна
+        </Link>
         <LuChevronRight size={12} />
         <span className="text-ink">{category.name}</span>
       </nav>
 
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <span className="text-xs uppercase tracking-widest text-accent">Каталог</span>
-          <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">{category.name}</h1>
+          <span className="text-xs uppercase tracking-widest text-accent">
+            Каталог
+          </span>
+          <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+            {category.name}
+          </h1>
           {category.description && (
             <p className="mt-1 text-sm text-ink-soft">{category.description}</p>
           )}
