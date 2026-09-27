@@ -39,13 +39,13 @@ export default function CartPage() {
             if (!product) return null;
             return (
               <li key={`${line.slug}-${line.size}-${line.color}`} className="flex gap-4 py-6">
-                <Link href={`/product/${product._id}`} className="shrink-0">
+                <Link href={`/product/${product.slug}`} className="shrink-0">
                   <ProductPhoto product={product} className="h-32 w-24 rounded-xl sm:h-40 sm:w-28" />
                 </Link>
                 <div className="flex flex-1 flex-col">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <Link href={`/product/${product._id}`} className="font-medium text-ink hover:text-accent">
+                      <Link href={`/product/${product.slug}`} className="font-medium text-ink hover:text-accent">
                         {product.name}
                       </Link>
                       <p className="mt-1 text-sm text-ink-soft">

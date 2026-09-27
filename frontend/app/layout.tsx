@@ -3,7 +3,8 @@ import { Inter, Pinyon_Script, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
 import { ProductsProvider } from "@/lib/products-context";
-import { getCategories, getProducts } from "@/lib/products";
+import { getBrands, getCategories, getProducts } from "@/lib/products";
+import { brandSlug } from "@/lib/types";
 import { Providers } from "./providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -30,11 +31,26 @@ const scriptFont = Pinyon_Script({
 
 export const revalidate = 60;
 
+const defaultTitle = "Martosoli — сучасний одяг для щоденного стилю";
+const defaultDescription =
+  "Martosoli — інтернет-магазин одягу для жінок і чоловіків. Якісні тканини, продумана посадка, швидка доставка по Україні.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Martosoli — сучасний одяг для щоденного стилю",
-  description:
-    "Martosoli — інтернет-магазин одягу для жінок і чоловіків. Якісні тканини, продумана посадка, швидка доставка по Україні.",
+  title: defaultTitle,
+  description: defaultDescription,
+  openGraph: {
+    siteName: "Martosoli",
+    title: defaultTitle,
+    description: defaultDescription,
+    type: "website",
+    locale: "uk_UA",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultTitle,
+    description: defaultDescription,
+  },
 };
 
 export default async function RootLayout({
@@ -42,7 +58,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [categories, products] = await Promise.all([getCategories(), getProducts()]);
+  const [categories, products, brands] = await Promise.all([
+    getCategories(),
+    getProducts(),
+    getBrands(),
+  ]);
+
+  const productCountBySlug = new Map<string, number>();
+  for (const product of products) {
+    const slug = brandSlug(product.brand);
+    if (!slug) continue;
+    productCountBySlug.set(slug, (productCountBySlug.get(slug) ?? 0) + 1);
+  }
+  const topBrands = [...brands]
+    .sort((a, b) => (productCountBySlug.get(b.slug) ?? 0) - (productCountBySlug.get(a.slug) ?? 0))
+    .slice(0, 6);
 
   return (
     <html
@@ -56,7 +86,7 @@ export default async function RootLayout({
             <CartProvider>
               <Header categories={categories} />
               <main className="flex-1">{children}</main>
-              <Footer categories={categories} />
+              <Footer categories={categories} brands={topBrands} />
               <CartDrawer />
             </CartProvider>
           </ProductsProvider>

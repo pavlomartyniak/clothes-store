@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { LuChevronRight, LuSlidersHorizontal } from "react-icons/lu";
 import { getCategories, getProducts } from "@/lib/products";
 import { categorySlug } from "@/lib/types";
+import { siteUrl } from "@/lib/site";
+import { truncate } from "@/lib/seo";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -20,9 +22,13 @@ export async function generateMetadata({
   if (!category) return {};
 
   return {
-    title: `${category.name} — Martosoli`,
-    description:
-      category.description ?? `${category.name} — каталог Martosoli. Якісні тканини, швидка доставка по Україні.`,
+    title: truncate(`${category.name} купити в Києві та Україні — Martosoli`, 60),
+    description: truncate(
+      category.description ??
+        `${category.name} — каталог Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+      160
+    ),
+    alternates: { canonical: `${siteUrl}/${slug}` },
   };
 }
 

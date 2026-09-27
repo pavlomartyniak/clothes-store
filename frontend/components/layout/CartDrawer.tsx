@@ -56,12 +56,12 @@ export function CartDrawer() {
                 if (!product) return null;
                 return (
                   <li key={`${line.slug}-${line.size}-${line.color}`} className="flex gap-4">
-                    <Link href={`/product/${product._id}`} onClick={closeCart} className="shrink-0">
+                    <Link href={`/product/${product.slug}`} onClick={closeCart} className="shrink-0">
                       <ProductPhoto product={product} className="h-24 w-20 rounded-xl" />
                     </Link>
                     <div className="flex flex-1 flex-col gap-1">
                       <div className="flex items-start justify-between gap-2">
-                        <Link href={`/product/${product._id}`} onClick={closeCart} className="text-sm font-medium hover:text-accent">
+                        <Link href={`/product/${product.slug}`} onClick={closeCart} className="text-sm font-medium hover:text-accent">
                           {product.name}
                         </Link>
                         <button

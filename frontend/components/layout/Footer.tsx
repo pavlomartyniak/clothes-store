@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { LuMail } from "react-icons/lu";
-import { Category } from "@/lib/types";
+import { Brand, Category } from "@/lib/types";
 import { Logo } from "./Logo";
 
-export function Footer({ categories }: { categories: Category[] }) {
+export function Footer({ categories, brands }: { categories: Category[]; brands: Brand[] }) {
   return (
     <footer className="border-t border-line bg-paper-soft">
-      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="space-y-4">
           <span className="font-display text-2xl text-ink">
             <Logo />
@@ -19,7 +19,7 @@ export function Footer({ categories }: { categories: Category[] }) {
             {categories.map((c) => (
               <li key={c.slug}>
                 <Link
-                  href={`/catalog/${encodeURIComponent(c.slug)}`}
+                  href={`/${encodeURIComponent(c.slug)}`}
                   className="hover:text-ink"
                 >
                   {c.name}
@@ -28,6 +28,21 @@ export function Footer({ categories }: { categories: Category[] }) {
             ))}
           </ul>
         </div>
+
+        {brands.length > 0 && (
+          <div>
+            <h4 className="mb-4 text-sm font-semibold text-ink">Топ бренди</h4>
+            <ul className="space-y-3 text-sm text-ink-soft">
+              {brands.map((b) => (
+                <li key={b.slug}>
+                  <Link href={`/brand/${encodeURIComponent(b.slug)}`} className="hover:text-ink">
+                    {b.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div>
           <h4 className="mb-4 text-sm font-semibold text-ink">Покупцям</h4>

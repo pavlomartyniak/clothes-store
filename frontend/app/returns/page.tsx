@@ -1,6 +1,9 @@
+import { siteUrl } from "@/lib/site";
+
 export const metadata = {
   title: "Обмін і повернення — Martosoli",
   description: "Умови обміну та повернення товарів у Martosoli.",
+  alternates: { canonical: `${siteUrl}/returns` },
 };
 
 export default function ReturnsPage() {

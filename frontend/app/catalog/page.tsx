@@ -7,6 +7,7 @@ import { CatalogFilters } from "@/components/product/CatalogFilters";
 import { MobileFilters } from "@/components/product/MobileFilters";
 import { ActiveFilterChips } from "@/components/product/ActiveFilterChips";
 import { Reveal } from "@/components/motion/Reveal";
+import { siteUrl } from "@/lib/site";
 
 type SearchParams = Promise<{
   category?: string;
@@ -14,10 +15,15 @@ type SearchParams = Promise<{
   size?: string;
   priceMax?: string;
   sort?: string;
+  search?: string;
 }>;
 
+// A canonical fixed to the bare path regardless of category/sub/size/
+// priceMax/sort — those are all client-side filters on the same content,
+// not distinct pages to index.
 export const metadata = {
   title: "Каталог — Martosoli",
+  alternates: { canonical: `${siteUrl}/catalog` },
 };
 
 export const revalidate = 60;
@@ -29,7 +35,7 @@ export default async function CatalogPage({
 }) {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
 
-  const { category, sub, size, priceMax, sort } = await searchParams;
+  const { category, sub, size, priceMax, sort, search } = await searchParams;
   const activeCategory = categories.find((c) => c.slug === category)?.slug;
   const activeSubcategories = sub?.split(",").filter(Boolean) ?? [];
   const activeSizes = size?.split(",").filter(Boolean) ?? [];
@@ -38,6 +44,11 @@ export default async function CatalogPage({
   let list = activeCategory
     ? products.filter((p) => categorySlug(p.category) === activeCategory)
     : products;
+
+  if (search?.trim()) {
+    const query = search.trim().toLowerCase();
+    list = list.filter((p) => p.name.toLowerCase().includes(query));
+  }
 
   if (activeSubcategories.length > 0) {
     list = list.filter((p) => !!p.subcategory && activeSubcategories.includes(p.subcategory));
@@ -56,9 +67,11 @@ export default async function CatalogPage({
     return Number(b.isBestseller) - Number(a.isBestseller);
   });
 
-  const title = activeCategory
-    ? categories.find((c) => c.slug === activeCategory)?.name
-    : "Весь каталог";
+  const title = search?.trim()
+    ? `Результати пошуку: «${search.trim()}»`
+    : activeCategory
+      ? categories.find((c) => c.slug === activeCategory)?.name
+      : "Весь каталог";
 
   return (
     <div className="container-page py-10 sm:py-14">

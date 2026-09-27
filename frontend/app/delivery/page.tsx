@@ -1,7 +1,10 @@
+import { siteUrl } from "@/lib/site";
+
 export const metadata = {
   title: "Доставка та оплата — Martosoli",
   description:
     "Умови доставки Новою поштою та способи оплати замовлень у Martosoli.",
+  alternates: { canonical: `${siteUrl}/delivery` },
 };
 
 export default function DeliveryPage() {

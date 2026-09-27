@@ -4,24 +4,38 @@ import { notFound } from "next/navigation";
 import { LuChevronRight } from "react-icons/lu";
 import { getBrands, getProducts } from "@/lib/products";
 import { brandSlug } from "@/lib/types";
+import { siteUrl } from "@/lib/site";
+import { truncate } from "@/lib/seo";
+import { optimizedImageUrl } from "@/lib/cloudinary";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
 
 export const revalidate = 60;
+
+async function getBrandProducts(slug: string) {
+  const [brands, products] = await Promise.all([getBrands(), getProducts()]);
+  const brand = brands.find((b) => b.slug === slug);
+  const matches = products.filter((p) => brandSlug(p.brand) === slug);
+  return { brand, matches };
+}
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ brand: string }>;
 }) {
-  const { brand: slug } = await params;
-  const brands = await getBrands();
-  const brand = brands.find((b) => b.slug === slug);
+  const { brand: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
+  const { brand } = await getBrandProducts(slug);
   if (!brand) return {};
 
   return {
-    title: `${brand.name} — Martosoli`,
-    description: `Товари бренду ${brand.name} у каталозі Martosoli.`,
+    title: truncate(`${brand.name} купити в Україні — Martosoli`, 60),
+    description: truncate(
+      `Товари бренду ${brand.name} в каталозі Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+      160
+    ),
+    alternates: { canonical: `${siteUrl}/brand/${slug}` },
   };
 }
 
@@ -30,12 +44,10 @@ export default async function BrandPage({
 }: {
   params: Promise<{ brand: string }>;
 }) {
-  const { brand: slug } = await params;
-  const [brands, products] = await Promise.all([getBrands(), getProducts()]);
-  const brand = brands.find((b) => b.slug === slug);
+  const { brand: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
+  const { brand, matches } = await getBrandProducts(slug);
   if (!brand) notFound();
-
-  const matches = products.filter((p) => brandSlug(p.brand) === slug);
 
   return (
     <div className="container-page py-10 sm:py-14">
@@ -51,7 +63,7 @@ export default async function BrandPage({
         {brand.imageUrl && (
           <div className="relative h-16 w-16 shrink-0">
             <Image
-              src={brand.imageUrl}
+              src={optimizedImageUrl(brand.imageUrl)}
               alt={brand.name}
               fill
               unoptimized

@@ -1,12 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getBrands } from "@/lib/products";
+import { siteUrl } from "@/lib/site";
+import { optimizedImageUrl } from "@/lib/cloudinary";
 
 export const revalidate = 60;
 
 export const metadata = {
   title: "Бренди — Martosoli",
   description: "Усі бренди, представлені в каталозі Martosoli.",
+  alternates: { canonical: `${siteUrl}/brands` },
 };
 
 export default async function BrandsPage() {
@@ -28,13 +31,13 @@ export default async function BrandsPage() {
           {brands.map((brand) => (
             <Link
               key={brand._id}
-              href={`/brands/${brand.slug}`}
+              href={`/brand/${brand.slug}`}
               className="group flex flex-col items-center gap-3 rounded-2xl border border-line p-6 text-center transition-colors hover:border-ink"
             >
               <div className="relative flex h-16 w-full items-center justify-center">
                 {brand.imageUrl ? (
                   <Image
-                    src={brand.imageUrl}
+                    src={optimizedImageUrl(brand.imageUrl)}
                     alt={brand.name}
                     fill
                     unoptimized

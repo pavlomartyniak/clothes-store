@@ -17,19 +17,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   const categoryRoutes: MetadataRoute.Sitemap = categories.map((category) => ({
-    url: `${siteUrl}/catalog/${category.slug}`,
+    url: `${siteUrl}/${category.slug}`,
     lastModified: new Date(),
   }));
 
   const brandRoutes: MetadataRoute.Sitemap = brands.map((brand) => ({
-    url: `${siteUrl}/brands/${brand.slug}`,
+    url: `${siteUrl}/brand/${brand.slug}`,
     lastModified: new Date(),
   }));
 
-  const productRoutes: MetadataRoute.Sitemap = products.map((product) => ({
-    url: `${siteUrl}/product/${product._id}`,
-    lastModified: new Date(),
-  }));
+  // Sold-out products keep serving their page (never delisted/removed), but
+  // aren't submitted for indexing — no point sending crawl budget at a page
+  // that can't be bought from right now.
+  const productRoutes: MetadataRoute.Sitemap = products
+    .filter((product) => !product.soldOut)
+    .map((product) => ({
+      url: `${siteUrl}/product/${encodeURIComponent(product.slug)}`,
+      lastModified: new Date(product.updatedAt),
+    }));
 
   return [...staticRoutes, ...categoryRoutes, ...brandRoutes, ...productRoutes];
 }

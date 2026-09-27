@@ -21,6 +21,20 @@ export async function getProductById(id: string): Promise<Product | undefined> {
   }
 }
 
+export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+  try {
+    return await apiGet<Product>(`/products/slug/${encodeURIComponent(slug)}`);
+  } catch {
+    return undefined;
+  }
+}
+
+const MONGO_ID_PATTERN = /^[0-9a-f]{24}$/i;
+
+export function isMongoId(value: string): boolean {
+  return MONGO_ID_PATTERN.test(value);
+}
+
 export function getRelatedProducts(product: Product, allProducts: Product[], limit = 4) {
   const slug = getCategorySlug(product.category);
   return allProducts

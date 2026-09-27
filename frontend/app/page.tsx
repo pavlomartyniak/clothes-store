@@ -4,8 +4,13 @@ import { BestSellers } from "@/components/sections/BestSellers";
 import { ValueProps } from "@/components/sections/ValueProps";
 import { Newsletter } from "@/components/sections/Newsletter";
 import { getCategories, getProducts } from "@/lib/products";
+import { siteUrl } from "@/lib/site";
 
 export const revalidate = 60;
+
+export const metadata = {
+  alternates: { canonical: siteUrl },
+};
 
 export default async function Home() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
