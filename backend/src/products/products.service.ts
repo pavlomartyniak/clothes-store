@@ -4,6 +4,7 @@ import { Model, QueryFilter } from 'mongoose';
 import { Product, ProductDocument, ProductImage } from './schemas/product.schema.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
+import { slugify } from '../common/slugify.js';
 
 export type ProductFilters = {
   category?: string;
@@ -19,8 +20,20 @@ export class ProductsService {
     private readonly productModel: Model<ProductDocument>,
   ) {}
 
-  create(dto: CreateProductDto) {
-    return this.productModel.create(dto);
+  async create(dto: CreateProductDto) {
+    const slug = await this.uniqueSlug(slugify(dto.name));
+    return this.productModel.create({ ...dto, slug });
+  }
+
+  /** Appends -2, -3, ... until the slug doesn't collide with an existing product. */
+  private async uniqueSlug(base: string): Promise<string> {
+    let slug = base;
+    let suffix = 2;
+    while (await this.productModel.exists({ slug })) {
+      slug = `${base}-${suffix}`;
+      suffix += 1;
+    }
+    return slug;
   }
 
   findAll(filters: ProductFilters = {}) {

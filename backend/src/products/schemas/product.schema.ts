@@ -69,6 +69,9 @@ export class Product {
 
   @Prop({ default: false })
   isBestseller: boolean;
+
+  @Prop({ default: false })
+  soldOut: boolean;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

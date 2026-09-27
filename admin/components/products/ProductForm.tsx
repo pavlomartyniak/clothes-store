@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LuPlus, LuTrash2 } from "react-icons/lu";
 import { Category, Product, ProductColor } from "@/lib/types";
-import { slugify } from "@/lib/utils";
 import { extractErrorMessage } from "@/lib/http";
 import { Button } from "@/components/ui/Button";
 import { Field, inputClass, textareaClass } from "@/components/ui/Field";
@@ -55,6 +54,7 @@ export function ProductForm({
   );
   const [isNew, setIsNew] = useState(product?.isNew ?? false);
   const [isBestseller, setIsBestseller] = useState(product?.isBestseller ?? false);
+  const [soldOut, setSoldOut] = useState(product?.soldOut ?? false);
 
   const createProduct = useCreateProductMutation();
   const updateProduct = useUpdateProductMutation(product?._id ?? "");
@@ -92,7 +92,6 @@ export function ProductForm({
 
     const payload: ProductInput = {
       name: name.trim(),
-      slug: product?.slug ?? slugify(name).replace(/\s+/g, "-"),
       category: categoryIdValue,
       subcategory: subcategory || undefined,
       brand: brandIdValue || undefined,
@@ -104,6 +103,7 @@ export function ProductForm({
       colors: colors.filter((c) => c.name.trim() && c.hex.trim()),
       isNew,
       isBestseller,
+      soldOut,
     };
 
     try {
@@ -295,6 +295,15 @@ export function ProductForm({
             className="h-4 w-4 rounded border-line accent-ink"
           />
           Бестселер
+        </label>
+        <label className="flex items-center gap-2 text-sm text-ink">
+          <input
+            type="checkbox"
+            checked={soldOut}
+            onChange={(e) => setSoldOut(e.target.checked)}
+            className="h-4 w-4 rounded border-line accent-ink"
+          />
+          Продано
         </label>
       </div>
 

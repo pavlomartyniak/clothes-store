@@ -46,6 +46,7 @@ export type Product = {
   images: ProductImage[];
   isNew: boolean;
   isBestseller: boolean;
+  soldOut: boolean;
   createdAt: string;
   updatedAt: string;
 };

@@ -22,9 +22,6 @@ export class CreateProductDto {
   @IsString()
   name: string;
 
-  @IsString()
-  slug: string;
-
   @IsMongoId()
   category: string;
 
@@ -71,4 +68,8 @@ export class CreateProductDto {
   @IsOptional()
   @IsBoolean()
   isBestseller?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  soldOut?: boolean;
 }

@@ -12,7 +12,6 @@ export const productKeys = {
 
 export type ProductInput = {
   name: string;
-  slug: string;
   category: string;
   subcategory?: string;
   brand?: string;
@@ -24,6 +23,7 @@ export type ProductInput = {
   colors: ProductColor[];
   isNew: boolean;
   isBestseller: boolean;
+  soldOut: boolean;
 };
 
 export function useProductsQuery(search?: string) {
