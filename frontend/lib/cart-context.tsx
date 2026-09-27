@@ -11,7 +11,7 @@ import {
 import { CartLine } from "./types";
 import { useProducts } from "./products-context";
 
-const STORAGE_KEY = "maison:cart";
+const STORAGE_KEY = "martosoli:cart";
 const EMPTY_LINES: CartLine[] = [];
 
 let lines: CartLine[] = EMPTY_LINES;

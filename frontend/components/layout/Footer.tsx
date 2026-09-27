@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LuInstagram, LuFacebook, LuMail, LuPhone } from "react-icons/lu";
+import { LuMail } from "react-icons/lu";
 import { Category } from "@/lib/types";
 import { Logo } from "./Logo";
 
@@ -11,23 +11,6 @@ export function Footer({ categories }: { categories: Category[] }) {
           <span className="font-display text-2xl text-ink">
             <Logo />
           </span>
-
-          <div className="flex gap-3 pt-1">
-            <a
-              href="#"
-              aria-label="Instagram"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-soft transition-colors hover:border-ink hover:text-ink"
-            >
-              <LuInstagram size={16} />
-            </a>
-            <a
-              href="#"
-              aria-label="Facebook"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-soft transition-colors hover:border-ink hover:text-ink"
-            >
-              <LuFacebook size={16} />
-            </a>
-          </div>
         </div>
 
         <div>
@@ -36,7 +19,7 @@ export function Footer({ categories }: { categories: Category[] }) {
             {categories.map((c) => (
               <li key={c.slug}>
                 <Link
-                  href={`/catalog?category=${encodeURIComponent(c.slug)}`}
+                  href={`/catalog/${encodeURIComponent(c.slug)}`}
                   className="hover:text-ink"
                 >
                   {c.name}
@@ -60,10 +43,14 @@ export function Footer({ categories }: { categories: Category[] }) {
               </Link>
             </li>
             <li>
-              <span>Доставка та оплата</span>
+              <Link href="/delivery" className="hover:text-ink">
+                Доставка та оплата
+              </Link>
             </li>
             <li>
-              <span>Обмін і повернення</span>
+              <Link href="/returns" className="hover:text-ink">
+                Обмін і повернення
+              </Link>
             </li>
           </ul>
         </div>
@@ -72,20 +59,16 @@ export function Footer({ categories }: { categories: Category[] }) {
           <h4 className="mb-4 text-sm font-semibold text-ink">Контакти</h4>
           <ul className="space-y-3 text-sm text-ink-soft">
             <li className="flex items-center gap-2">
-              <LuPhone size={15} /> +380 (44) 123 45 67
+              <LuMail size={15} /> hello@martosoli.ua
             </li>
-            <li className="flex items-center gap-2">
-              <LuMail size={15} /> hello@maison.ua
-            </li>
-            <li>Київ, вул. Хрещатик, 1</li>
           </ul>
         </div>
       </div>
 
       <div className="border-t border-line py-5">
         <div className="container-page flex flex-col items-center justify-between gap-2 text-xs text-ink-soft sm:flex-row">
-          <span>© {new Date().getFullYear()} Maison. Усі права захищені.</span>
-          <span>Дизайн і розробка — власна команда Maison</span>
+          <span>© {new Date().getFullYear()} Martosoli. Усі права захищені.</span>
+          <span>Дизайн і розробка — власна команда Martosoli</span>
         </div>
       </div>
     </footer>

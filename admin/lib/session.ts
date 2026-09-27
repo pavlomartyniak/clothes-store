@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-const TOKEN_COOKIE = "maison_admin_token";
+const TOKEN_COOKIE = "martosoli_admin_token";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days, matches backend JWT expiry
 
 export async function getToken() {

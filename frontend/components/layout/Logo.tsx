@@ -2,7 +2,7 @@ export function Logo({ className = "" }: { className?: string }) {
   return (
     <span
       role="img"
-      aria-label="Maison"
+      aria-label="Martosoli"
       className={`inline-flex items-end whitespace-nowrap ${className}`}
     >
       <svg viewBox="0 0 60 100" aria-hidden="true" className="h-[1em] w-auto shrink-0">
@@ -21,7 +21,7 @@ export function Logo({ className = "" }: { className?: string }) {
       >
         A
       </span>
-      <span aria-hidden="true">ISON</span>
+      <span aria-hidden="true">RTOSOLI</span>
     </span>
   );
 }

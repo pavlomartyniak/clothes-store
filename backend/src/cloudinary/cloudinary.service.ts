@@ -15,7 +15,7 @@ export class CloudinaryService {
   uploadImage(buffer: Buffer): Promise<UploadApiResponse> {
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: 'maison/products' },
+        { folder: 'martosoli/products' },
         (error, result) => {
           if (error || !result) {
             reject(error ?? new Error('Cloudinary upload failed'));
