@@ -15,6 +15,7 @@ export type ProductInput = {
   category: string;
   subcategory?: string;
   brand?: string;
+  material?: string;
   price: number;
   oldPrice?: number;
   description: string;

@@ -31,6 +31,27 @@ export function useCreateCategoryMutation() {
   });
 }
 
+export function useUpdateCategoryMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id,
+      ...input
+    }: {
+      id: string;
+      name?: string;
+      description?: string;
+      content?: string;
+    }) => {
+      const res = await http.patch<Category>(`/categories/${id}`, input);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: categoryKeys.all });
+    },
+  });
+}
+
 export function useDeleteCategoryMutation() {
   const queryClient = useQueryClient();
   return useMutation({

@@ -39,6 +39,12 @@ export function ProductViewer({ product }: { product: Product }) {
 
         <p className="mt-5 text-sm leading-relaxed text-ink-soft">{product.description}</p>
 
+        {product.material && (
+          <p className="mt-3 text-sm text-ink-soft">
+            <span className="font-medium text-ink">Матеріал:</span> {product.material}
+          </p>
+        )}
+
         <div className="mt-8 border-t border-line pt-8">
           {product.soldOut ? (
             <p className="text-sm text-ink-soft">

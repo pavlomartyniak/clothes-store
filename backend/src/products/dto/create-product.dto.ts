@@ -33,6 +33,10 @@ export class CreateProductDto {
   @IsMongoId()
   brand?: string;
 
+  @IsOptional()
+  @IsString()
+  material?: string;
+
   @IsNumber()
   @Min(0)
   price: number;

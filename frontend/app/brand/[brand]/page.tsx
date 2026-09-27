@@ -101,6 +101,14 @@ export default async function BrandPage({
           ))}
         </div>
       )}
+
+      {brand.content && (
+        <section className="mx-auto mt-16 max-w-3xl space-y-4 border-t border-line pt-10 text-sm leading-relaxed text-ink-soft">
+          {brand.content.split("\n\n").map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </section>
+      )}
     </div>
   );
 }

@@ -17,7 +17,7 @@ export class BrandsService {
   ) {}
 
   create(dto: CreateBrandDto) {
-    return this.brandModel.create({ name: dto.name, slug: slugify(dto.name) });
+    return this.brandModel.create({ ...dto, slug: slugify(dto.name) });
   }
 
   findAll() {

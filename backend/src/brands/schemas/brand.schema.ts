@@ -17,6 +17,10 @@ export class Brand {
   /** Cloudinary's asset id — required to delete the file later. */
   @Prop()
   imagePublicId?: string;
+
+  /** Long-form SEO body copy shown under the product grid on the brand page. */
+  @Prop({ trim: true })
+  content?: string;
 }
 
 export const BrandSchema = SchemaFactory.createForClass(Brand);

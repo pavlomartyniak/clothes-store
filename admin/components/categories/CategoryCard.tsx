@@ -1,12 +1,13 @@
 "use client";
 
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { LuPlus, LuTrash2, LuX } from "react-icons/lu";
 import { Category } from "@/lib/types";
 import {
   useAddSubcategoryMutation,
   useDeleteCategoryMutation,
   useRemoveSubcategoryMutation,
+  useUpdateCategoryMutation,
 } from "@/lib/queries/categories";
 import { extractErrorMessage } from "@/lib/http";
 import { Badge } from "@/components/ui/Badge";
@@ -15,10 +16,16 @@ export function CategoryCard({ category }: { category: Category }) {
   const addSubcategory = useAddSubcategoryMutation();
   const deleteCategory = useDeleteCategoryMutation();
   const removeSubcategory = useRemoveSubcategoryMutation();
+  const updateCategory = useUpdateCategoryMutation();
+  const [content, setContent] = useState(category.content ?? "");
 
   function handleDeleteCategory() {
     if (!confirm(`Видалити категорію "${category.name}"?`)) return;
     deleteCategory.mutate(category._id);
+  }
+
+  function handleSaveContent() {
+    updateCategory.mutate({ id: category._id, content });
   }
 
   function handleAddSubcategory(e: FormEvent<HTMLFormElement>) {
@@ -94,6 +101,33 @@ export function CategoryCard({ category }: { category: Category }) {
       {deleteCategory.isError && (
         <p className="mt-2 text-sm text-danger">{extractErrorMessage(deleteCategory.error)}</p>
       )}
+
+      <details className="mt-4 border-t border-line pt-4">
+        <summary className="cursor-pointer text-sm font-medium text-ink-soft hover:text-ink">
+          SEO-текст сторінки категорії
+        </summary>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={6}
+          placeholder="150–300 слів під сіткою товарів: моделі, матеріали, як обрати розмір, доставка"
+          className="mt-3 w-full rounded-lg border border-line bg-paper p-3 text-sm text-ink focus:border-ink focus:outline-none"
+        />
+        <div className="mt-2 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleSaveContent}
+            disabled={updateCategory.isPending}
+            className="rounded-lg border border-line px-3 py-1.5 text-sm font-medium text-ink hover:border-ink"
+          >
+            {updateCategory.isPending ? "Збереження..." : "Зберегти"}
+          </button>
+          <span className="text-xs text-ink-soft">{content.trim().split(/\s+/).filter(Boolean).length} слів</span>
+        </div>
+        {updateCategory.isError && (
+          <p className="mt-2 text-sm text-danger">{extractErrorMessage(updateCategory.error)}</p>
+        )}
+      </details>
     </div>
   );
 }

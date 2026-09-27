@@ -9,6 +9,8 @@ export type Category = {
   name: string;
   slug: string;
   description?: string;
+  /** Long-form SEO body copy shown under the product grid. */
+  content?: string;
   subcategories: Subcategory[];
 };
 
@@ -27,6 +29,8 @@ export type Brand = {
   name: string;
   slug: string;
   imageUrl?: string;
+  /** Long-form SEO body copy shown under the product grid. */
+  content?: string;
 };
 
 export type Product = {
@@ -36,6 +40,7 @@ export type Product = {
   category: Category | string | null;
   subcategory?: string;
   brand?: Brand | string | null;
+  material?: string;
   price: number;
   oldPrice?: number;
   description: string;

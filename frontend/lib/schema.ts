@@ -34,6 +34,8 @@ export function productSchema(product: Product, url: string) {
     sku: product._id,
     url,
     ...(brand ? { brand: { "@type": "Brand", name: brand } } : {}),
+    ...(product.material ? { material: product.material } : {}),
+    ...(product.sizes.length > 0 ? { size: product.sizes.join(", ") } : {}),
     offers: {
       "@type": "Offer",
       url,

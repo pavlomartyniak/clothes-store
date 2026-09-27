@@ -31,6 +31,19 @@ export function useCreateBrandMutation() {
   });
 }
 
+export function useUpdateBrandMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...input }: { id: string; name?: string; content?: string }) => {
+      const res = await http.patch<Brand>(`/brands/${id}`, input);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: brandKeys.all });
+    },
+  });
+}
+
 export function useDeleteBrandMutation() {
   const queryClient = useQueryClient();
   return useMutation({

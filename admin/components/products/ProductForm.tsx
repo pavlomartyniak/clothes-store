@@ -44,6 +44,7 @@ export function ProductForm({
   const [subcategory, setSubcategory] = useState(product?.subcategory ?? "");
   const [brandIdValue, setBrandIdValue] = useState(brandId(product));
   const { data: brands = [] } = useBrandsQuery();
+  const [material, setMaterial] = useState(product?.material ?? "");
   const [price, setPrice] = useState(product?.price?.toString() ?? "");
   const [oldPrice, setOldPrice] = useState(product?.oldPrice?.toString() ?? "");
   const [description, setDescription] = useState(product?.description ?? "");
@@ -95,6 +96,7 @@ export function ProductForm({
       category: categoryIdValue,
       subcategory: subcategory || undefined,
       brand: brandIdValue || undefined,
+      material: material.trim() || undefined,
       price: Number(price),
       oldPrice: oldPrice ? Number(oldPrice) : undefined,
       description: description.trim(),
@@ -169,21 +171,32 @@ export function ProductForm({
         </Field>
       </div>
 
-      <Field label="Бренд (необовʼязково)" htmlFor="brand">
-        <select
-          id="brand"
-          value={brandIdValue}
-          onChange={(e) => setBrandIdValue(e.target.value)}
-          className={inputClass}
-        >
-          <option value="">Без бренду</option>
-          {brands.map((b) => (
-            <option key={b._id} value={b._id}>
-              {b.name}
-            </option>
-          ))}
-        </select>
-      </Field>
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Бренд (необовʼязково)" htmlFor="brand">
+          <select
+            id="brand"
+            value={brandIdValue}
+            onChange={(e) => setBrandIdValue(e.target.value)}
+            className={inputClass}
+          >
+            <option value="">Без бренду</option>
+            {brands.map((b) => (
+              <option key={b._id} value={b._id}>
+                {b.name}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Матеріал (необовʼязково)" htmlFor="material">
+          <input
+            id="material"
+            value={material}
+            onChange={(e) => setMaterial(e.target.value)}
+            placeholder="Наприклад, 100% кашемір"
+            className={inputClass}
+          />
+        </Field>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <Field label="Ціна, грн" htmlFor="price">

@@ -43,6 +43,9 @@ export class Product {
   @Prop({ type: Types.ObjectId, ref: 'Brand' })
   brand?: Types.ObjectId;
 
+  @Prop({ trim: true })
+  material?: string;
+
   @Prop({ required: true, min: 0 })
   price: number;
 

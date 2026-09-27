@@ -9,6 +9,7 @@ export type Category = {
   name: string;
   slug: string;
   description?: string;
+  content?: string;
   subcategories: Subcategory[];
 };
 
@@ -28,6 +29,7 @@ export type Brand = {
   slug: string;
   imageUrl?: string;
   imagePublicId?: string;
+  content?: string;
 };
 
 export type Product = {
@@ -37,6 +39,7 @@ export type Product = {
   category: Category | string | null;
   subcategory?: string;
   brand?: Brand | string | null;
+  material?: string;
   price: number;
   oldPrice?: number;
   description: string;

@@ -25,6 +25,10 @@ export class Category {
   @Prop({ trim: true })
   description?: string;
 
+  /** Long-form SEO body copy shown under the product grid on the category page. */
+  @Prop({ trim: true })
+  content?: string;
+
   @Prop({ type: [SubcategorySchema], default: [] })
   subcategories: (Subcategory & { _id: Types.ObjectId })[];
 }

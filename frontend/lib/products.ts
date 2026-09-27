@@ -1,5 +1,12 @@
 import { apiGet } from "./api";
-import { Brand, Category, categorySlug as getCategorySlug, Product, Subcategory } from "./types";
+import {
+  Brand,
+  brandSlug as getBrandSlug,
+  Category,
+  categorySlug as getCategorySlug,
+  Product,
+  Subcategory,
+} from "./types";
 
 export async function getProducts(): Promise<Product[]> {
   return apiGet<Product[]>("/products");
@@ -35,11 +42,25 @@ export function isMongoId(value: string): boolean {
   return MONGO_ID_PATTERN.test(value);
 }
 
+/** Shoppers search by brand as much as by garment type, so a same-brand
+ * match is shown first; the rest of the shelf fills in with same-category
+ * items, without repeating a product in both groups. */
 export function getRelatedProducts(product: Product, allProducts: Product[], limit = 4) {
-  const slug = getCategorySlug(product.category);
-  return allProducts
-    .filter((p) => p._id !== product._id && getCategorySlug(p.category) === slug)
-    .slice(0, limit);
+  const categorySlug = getCategorySlug(product.category);
+  const brandSlugValue = getBrandSlug(product.brand);
+
+  const sameBrand = brandSlugValue
+    ? allProducts.filter((p) => p._id !== product._id && getBrandSlug(p.brand) === brandSlugValue)
+    : [];
+
+  const sameCategory = allProducts.filter(
+    (p) =>
+      p._id !== product._id &&
+      getCategorySlug(p.category) === categorySlug &&
+      !sameBrand.some((b) => b._id === p._id)
+  );
+
+  return [...sameBrand, ...sameCategory].slice(0, limit);
 }
 
 const LETTER_SIZE_ORDER = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
