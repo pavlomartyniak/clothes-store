@@ -22,12 +22,21 @@ export type ProductImage = {
   publicId: string;
 };
 
+export type Brand = {
+  _id: string;
+  name: string;
+  slug: string;
+  imageUrl?: string;
+  imagePublicId?: string;
+};
+
 export type Product = {
   _id: string;
   name: string;
   slug: string;
   category: Category | string | null;
   subcategory?: string;
+  brand?: Brand | string | null;
   price: number;
   oldPrice?: number;
   description: string;

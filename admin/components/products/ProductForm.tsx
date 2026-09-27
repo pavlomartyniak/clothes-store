@@ -14,12 +14,20 @@ import {
   useUpdateProductMutation,
   ProductInput,
 } from "@/lib/queries/products";
+import { useBrandsQuery } from "@/lib/queries/brands";
 
 function categoryId(product?: Product) {
   if (!product) return "";
   const category = product.category;
   if (!category) return "";
   return typeof category === "string" ? category : category._id;
+}
+
+function brandId(product?: Product) {
+  if (!product) return "";
+  const brand = product.brand;
+  if (!brand) return "";
+  return typeof brand === "string" ? brand : brand._id;
 }
 
 export function ProductForm({
@@ -35,6 +43,8 @@ export function ProductForm({
   const [name, setName] = useState(product?.name ?? "");
   const [categoryIdValue, setCategoryIdValue] = useState(categoryId(product));
   const [subcategory, setSubcategory] = useState(product?.subcategory ?? "");
+  const [brandIdValue, setBrandIdValue] = useState(brandId(product));
+  const { data: brands = [] } = useBrandsQuery();
   const [price, setPrice] = useState(product?.price?.toString() ?? "");
   const [oldPrice, setOldPrice] = useState(product?.oldPrice?.toString() ?? "");
   const [description, setDescription] = useState(product?.description ?? "");
@@ -85,6 +95,7 @@ export function ProductForm({
       slug: product?.slug ?? slugify(name).replace(/\s+/g, "-"),
       category: categoryIdValue,
       subcategory: subcategory || undefined,
+      brand: brandIdValue || undefined,
       price: Number(price),
       oldPrice: oldPrice ? Number(oldPrice) : undefined,
       description: description.trim(),
@@ -157,6 +168,22 @@ export function ProductForm({
           </select>
         </Field>
       </div>
+
+      <Field label="Бренд (необовʼязково)" htmlFor="brand">
+        <select
+          id="brand"
+          value={brandIdValue}
+          onChange={(e) => setBrandIdValue(e.target.value)}
+          className={inputClass}
+        >
+          <option value="">Без бренду</option>
+          {brands.map((b) => (
+            <option key={b._id} value={b._id}>
+              {b.name}
+            </option>
+          ))}
+        </select>
+      </Field>
 
       <div className="grid grid-cols-2 gap-4">
         <Field label="Ціна, грн" htmlFor="price">

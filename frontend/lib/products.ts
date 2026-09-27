@@ -1,5 +1,5 @@
 import { apiGet } from "./api";
-import { Category, categorySlug as getCategorySlug, Product, Subcategory } from "./types";
+import { Brand, Category, categorySlug as getCategorySlug, Product, Subcategory } from "./types";
 
 export async function getProducts(): Promise<Product[]> {
   return apiGet<Product[]>("/products");
@@ -7,6 +7,10 @@ export async function getProducts(): Promise<Product[]> {
 
 export async function getCategories(): Promise<Category[]> {
   return apiGet<Category[]>("/categories");
+}
+
+export async function getBrands(): Promise<Brand[]> {
+  return apiGet<Brand[]>("/brands");
 }
 
 export async function getProductById(id: string): Promise<Product | undefined> {

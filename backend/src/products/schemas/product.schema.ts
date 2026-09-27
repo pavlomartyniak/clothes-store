@@ -40,6 +40,9 @@ export class Product {
   @Prop({ trim: true })
   subcategory?: string;
 
+  @Prop({ type: Types.ObjectId, ref: 'Brand' })
+  brand?: Types.ObjectId;
+
   @Prop({ required: true, min: 0 })
   price: number;
 

@@ -32,9 +32,10 @@ export class ProductsController {
   findAll(
     @Query('category') category?: string,
     @Query('subcategory') subcategory?: string,
+    @Query('brand') brand?: string,
     @Query('search') search?: string,
   ) {
-    return this.productsService.findAll({ category, subcategory, search });
+    return this.productsService.findAll({ category, subcategory, brand, search });
   }
 
   @Public()

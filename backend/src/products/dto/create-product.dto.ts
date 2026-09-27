@@ -32,6 +32,10 @@ export class CreateProductDto {
   @IsString()
   subcategory?: string;
 
+  @IsOptional()
+  @IsMongoId()
+  brand?: string;
+
   @IsNumber()
   @Min(0)
   price: number;

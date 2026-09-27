@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LuLayoutDashboard, LuPackage, LuTags, LuShoppingBag } from "react-icons/lu";
+import { LuLayoutDashboard, LuPackage, LuTags, LuAward, LuShoppingBag } from "react-icons/lu";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/", label: "Огляд", icon: LuLayoutDashboard, exact: true },
   { href: "/products", label: "Товари", icon: LuPackage },
   { href: "/categories", label: "Категорії", icon: LuTags },
+  { href: "/brands", label: "Бренди", icon: LuAward },
   { href: "/orders", label: "Замовлення", icon: LuShoppingBag },
 ];
 

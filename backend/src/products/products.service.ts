@@ -8,6 +8,7 @@ import { UpdateProductDto } from './dto/update-product.dto.js';
 export type ProductFilters = {
   category?: string;
   subcategory?: string;
+  brand?: string;
   search?: string;
 };
 
@@ -26,12 +27,14 @@ export class ProductsService {
     const query: QueryFilter<ProductDocument> = {};
     if (filters.category) query.category = filters.category;
     if (filters.subcategory) query.subcategory = filters.subcategory;
+    if (filters.brand) query.brand = filters.brand;
     if (filters.search) {
       query.name = { $regex: filters.search, $options: 'i' };
     }
     return this.productModel
       .find(query)
       .populate('category', 'name slug')
+      .populate('brand', 'name slug imageUrl')
       .sort({ createdAt: -1 })
       .exec();
   }
@@ -40,6 +43,7 @@ export class ProductsService {
     const product = await this.productModel
       .findById(id)
       .populate('category', 'name slug')
+      .populate('brand', 'name slug imageUrl')
       .exec();
     if (!product) throw new NotFoundException('Товар не знайдено');
     return product;
@@ -49,6 +53,7 @@ export class ProductsService {
     const product = await this.productModel
       .findOne({ slug })
       .populate('category', 'name slug')
+      .populate('brand', 'name slug imageUrl')
       .exec();
     if (!product) throw new NotFoundException('Товар не знайдено');
     return product;
@@ -58,6 +63,7 @@ export class ProductsService {
     const product = await this.productModel
       .findByIdAndUpdate(id, dto, { new: true })
       .populate('category', 'name slug')
+      .populate('brand', 'name slug imageUrl')
       .exec();
     if (!product) throw new NotFoundException('Товар не знайдено');
     return product;
@@ -73,6 +79,7 @@ export class ProductsService {
     const product = await this.productModel
       .findByIdAndUpdate(id, { $push: { images: image } }, { new: true })
       .populate('category', 'name slug')
+      .populate('brand', 'name slug imageUrl')
       .exec();
     if (!product) throw new NotFoundException('Товар не знайдено');
     return product;
@@ -82,6 +89,7 @@ export class ProductsService {
     const product = await this.productModel
       .findByIdAndUpdate(id, { $pull: { images: { publicId } } }, { new: true })
       .populate('category', 'name slug')
+      .populate('brand', 'name slug imageUrl')
       .exec();
     if (!product) throw new NotFoundException('Товар не знайдено');
     return product;

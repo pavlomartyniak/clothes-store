@@ -9,6 +9,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { CategoriesModule } from './categories/categories.module.js';
 import { ProductsModule } from './products/products.module.js';
 import { OrdersModule } from './orders/orders.module.js';
+import { BrandsModule } from './brands/brands.module.js';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { OrdersModule } from './orders/orders.module.js';
     CategoriesModule,
     ProductsModule,
     OrdersModule,
+    BrandsModule,
   ],
   controllers: [AppController],
   providers: [

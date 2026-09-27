@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { Product } from "@/lib/types";
+import { brandName, Product } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
 import { ProductPhoto } from "./ProductPhoto";
 import { Badge } from "@/components/ui/Badge";
 import { WishlistButton } from "./WishlistButton";
 
 export function ProductCard({ product }: { product: Product }) {
+  const brand = brandName(product.brand);
+
   return (
     <Link href={`/product/${product._id}`} className="group block">
       <div className="relative aspect-3/4 overflow-hidden rounded-2xl">
@@ -20,9 +22,9 @@ export function ProductCard({ product }: { product: Product }) {
         <WishlistButton />
       </div>
       <div className="mt-3 space-y-1">
-        {product.subcategory && (
+        {(brand || product.subcategory) && (
           <p className="text-[11px] uppercase tracking-wider text-ink-soft">
-            {product.subcategory}
+            {[brand, product.subcategory].filter(Boolean).join(" · ")}
           </p>
         )}
         <h3 className="text-sm font-medium text-ink">{product.name}</h3>
