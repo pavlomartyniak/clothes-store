@@ -29,7 +29,7 @@ export function Hero({ products }: { products: Product[] }) {
             Осіння колекція 2026
           </span>
           <h1 className="font-display text-4xl leading-tight sm:text-5xl">
-            Стиль, що відчувається як другий одяг
+            Оригінальний одяг люксових брендів для щоденного стилю
           </h1>
           <p className="text-sm text-paper/85 sm:text-base">
             Продумані силуети та якісні тканини для щоденного гардеробу — від

@@ -38,9 +38,9 @@ export async function generateMetadata({
   const product = await resolveProduct(decodeURIComponent(rawSlug));
   if (!product) return {};
 
-  const title = truncate(`${product.name} купити в Україні — Martosoli`, 60);
+  const title = truncate(`${product.name} — Martosoli`, 60);
   const description = truncate(
-    `Купити ${product.name} за ${formatPrice(product.price)} в Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+    `Купити ${product.name} в Україні за ${formatPrice(product.price)} в Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
     160
   );
   const image = product.images[0]?.url;

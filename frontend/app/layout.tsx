@@ -31,9 +31,9 @@ const scriptFont = Pinyon_Script({
 
 export const revalidate = 60;
 
-const defaultTitle = "Martosoli — сучасний одяг для щоденного стилю";
+const defaultTitle = "Martosoli — оригінальний одяг люксових брендів";
 const defaultDescription =
-  "Martosoli — інтернет-магазин одягу для жінок і чоловіків. Якісні тканини, продумана посадка, швидка доставка по Україні.";
+  "Martosoli — оригінальний одяг преміальних брендів: Chanel, Gucci, Prada, Dior та інші. Доставка Новою поштою по всій Україні, огляд при отриманні.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
