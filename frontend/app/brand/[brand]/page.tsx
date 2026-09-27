@@ -7,8 +7,10 @@ import { brandSlug } from "@/lib/types";
 import { siteUrl } from "@/lib/site";
 import { truncate } from "@/lib/seo";
 import { optimizedImageUrl } from "@/lib/cloudinary";
+import { collectionPageSchema } from "@/lib/schema";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
+import { JsonLd } from "@/components/JsonLd";
 
 export const revalidate = 60;
 
@@ -48,9 +50,17 @@ export default async function BrandPage({
   const slug = decodeURIComponent(rawSlug);
   const { brand, matches } = await getBrandProducts(slug);
   if (!brand) notFound();
+  const brandUrl = `${siteUrl}/brand/${slug}`;
 
   return (
     <div className="container-page py-10 sm:py-14">
+      <JsonLd
+        data={collectionPageSchema(
+          brand.name,
+          brandUrl,
+          matches.map((p) => `${siteUrl}/product/${encodeURIComponent(p.slug)}`)
+        )}
+      />
       <nav className="mb-6 flex items-center gap-1.5 text-xs text-ink-soft">
         <Link href="/" className="hover:text-ink">Головна</Link>
         <LuChevronRight size={12} />

@@ -5,8 +5,10 @@ import { getCategories, getProducts } from "@/lib/products";
 import { categorySlug } from "@/lib/types";
 import { siteUrl } from "@/lib/site";
 import { truncate } from "@/lib/seo";
+import { collectionPageSchema } from "@/lib/schema";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
+import { JsonLd } from "@/components/JsonLd";
 
 export const revalidate = 60;
 
@@ -44,9 +46,17 @@ export default async function CategoryPage({
   if (!category) notFound();
 
   const list = products.filter((p) => categorySlug(p.category) === slug);
+  const categoryUrl = `${siteUrl}/${slug}`;
 
   return (
     <div className="container-page py-10 sm:py-14">
+      <JsonLd
+        data={collectionPageSchema(
+          category.name,
+          categoryUrl,
+          list.map((p) => `${siteUrl}/product/${encodeURIComponent(p.slug)}`)
+        )}
+      />
       <nav className="mb-6 flex items-center gap-1.5 text-xs text-ink-soft">
         <Link href="/" className="hover:text-ink">Головна</Link>
         <LuChevronRight size={12} />

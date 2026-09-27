@@ -2,7 +2,8 @@ import { siteUrl } from "@/lib/site";
 
 export const metadata = {
   title: "Обмін і повернення — Martosoli",
-  description: "Умови обміну та повернення товарів у Martosoli.",
+  description:
+    "Огляд товару на відділенні Нової пошти перед отриманням. Після отримання товар поверненню не підлягає.",
   alternates: { canonical: `${siteUrl}/returns` },
 };
 
@@ -12,30 +13,30 @@ export default function ReturnsPage() {
       <h1 className="font-display text-3xl text-ink sm:text-4xl">Обмін і повернення</h1>
 
       <section className="mt-10 space-y-3">
-        <h2 className="font-display text-xl text-ink">Умови повернення</h2>
+        <h2 className="font-display text-xl text-ink">Огляд перед отриманням</h2>
         <p className="text-sm leading-relaxed text-ink-soft">
-          Відповідно до законодавства про захист прав споживачів, товар
-          належної якості можна повернути або обміняти протягом 14 днів з
-          моменту отримання, якщо він не був у використанні, збережено його
-          товарний вигляд, споживчі властивості, ярлики та оригінальну
-          упаковку.
+          Усі замовлення відправляються Новою поштою. На відділенні ви можете
+          оглянути товар до того, як прийняти й оплатити посилку — перевірте
+          розмір, колір і стан речі. Якщо щось не влаштовує, просто відмовтесь
+          від отримання: посилку буде повернено нам, і жодних додаткових умов
+          для цього не потрібно.
         </p>
       </section>
 
       <section className="mt-8 space-y-3">
-        <h2 className="font-display text-xl text-ink">Як оформити обмін або повернення</h2>
+        <h2 className="font-display text-xl text-ink">Після отримання</h2>
         <p className="text-sm leading-relaxed text-ink-soft">
-          Напишіть на hello@martosoli.ua або зателефонуйте на +380 (44) 123 45 67,
-          вкажіть номер замовлення та причину звернення — ми надішлемо
-          інструкції та адресу для відправлення Новою поштою.
+          Якщо ви прийняли й оплатили товар на відділенні, обмін чи повернення
+          після цього неможливі. Тому радимо уважно оглянути річ саме в момент
+          отримання, до оплати.
         </p>
       </section>
 
       <section className="mt-8 space-y-3">
-        <h2 className="font-display text-xl text-ink">Повернення коштів</h2>
+        <h2 className="font-display text-xl text-ink">Питання щодо замовлення</h2>
         <p className="text-sm leading-relaxed text-ink-soft">
-          Кошти повертаємо тим самим способом, яким було здійснено оплату,
-          протягом кількох робочих днів після отримання й перевірки товару.
+          Напишіть на hello@martosoli.ua, вказавши номер замовлення — відповідаємо
+          у робочі дні.
         </p>
       </section>
     </div>

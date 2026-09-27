@@ -5,6 +5,8 @@ import { ValueProps } from "@/components/sections/ValueProps";
 import { Newsletter } from "@/components/sections/Newsletter";
 import { getCategories, getProducts } from "@/lib/products";
 import { siteUrl } from "@/lib/site";
+import { organizationAndWebsiteSchema } from "@/lib/schema";
+import { JsonLd } from "@/components/JsonLd";
 
 export const revalidate = 60;
 
@@ -17,6 +19,9 @@ export default async function Home() {
 
   return (
     <>
+      {organizationAndWebsiteSchema().map((schema) => (
+        <JsonLd key={schema["@type"]} data={schema} />
+      ))}
       <Hero products={products} />
       <CategoryShowcase categories={categories} products={products} />
       <BestSellers products={products} />

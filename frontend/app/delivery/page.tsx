@@ -37,8 +37,7 @@ export default function DeliveryPage() {
       <section className="mt-8 space-y-3">
         <h2 className="font-display text-xl text-ink">Питання щодо замовлення</h2>
         <p className="text-sm leading-relaxed text-ink-soft">
-          Зв&apos;яжіться з нами за телефоном +380 (44) 123 45 67 або на пошту
-          hello@martosoli.ua — відповідаємо у робочі дні.
+          Напишіть на hello@martosoli.ua — відповідаємо у робочі дні.
         </p>
       </section>
     </div>

@@ -13,9 +13,11 @@ import { siteUrl } from "@/lib/site";
 import { truncate } from "@/lib/seo";
 import { ogImageUrl } from "@/lib/cloudinary";
 import { formatPrice } from "@/lib/utils";
+import { breadcrumbSchema, productSchema } from "@/lib/schema";
 import { ProductCard } from "@/components/product/ProductCard";
 import { ProductViewer } from "@/components/product/ProductViewer";
 import { Reveal } from "@/components/motion/Reveal";
+import { JsonLd } from "@/components/JsonLd";
 
 export const revalidate = 60;
 
@@ -76,9 +78,18 @@ export default async function ProductPage({
   const allProducts = await getProducts();
   const related = getRelatedProducts(product, allProducts, 8);
   const categorySlugValue = categorySlug(product.category);
+  const productUrl = `${siteUrl}/product/${encodeURIComponent(product.slug)}`;
 
   return (
     <div className="container-page py-8 sm:py-12">
+      <JsonLd data={productSchema(product, productUrl)} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Головна", url: siteUrl },
+          { name: categoryName(product.category), url: `${siteUrl}/${categorySlugValue}` },
+          { name: product.name, url: productUrl },
+        ])}
+      />
       <nav className="mb-6 flex items-center gap-1.5 overflow-hidden text-xs text-ink-soft">
         <Link href="/" className="shrink-0 hover:text-ink">Головна</Link>
         <LuChevronRight size={12} className="shrink-0" />
