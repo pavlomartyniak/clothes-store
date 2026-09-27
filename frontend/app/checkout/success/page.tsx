@@ -4,7 +4,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { SuccessOrderNumber } from "./SuccessOrderNumber";
 
 export const metadata = {
-  title: "Замовлення прийнято — Maison",
+  title: "Замовлення прийнято — Martosoli",
 };
 
 export default function CheckoutSuccessPage() {
@@ -19,7 +19,7 @@ export default function CheckoutSuccessPage() {
       </Suspense>
       <p className="mt-4 max-w-md text-sm text-ink-soft">
         Ми надішлемо підтвердження на вашу пошту та зв&apos;яжемося з вами для узгодження
-        доставки. Дякуємо, що обираєте Maison.
+        доставки. Дякуємо, що обираєте Martosoli.
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <LinkButton href="/catalog" size="lg" variant="secondary">

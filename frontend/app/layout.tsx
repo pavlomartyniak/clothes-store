@@ -8,6 +8,7 @@ import { Providers } from "./providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/layout/CartDrawer";
+import { siteUrl } from "@/lib/site";
 
 const bodyFont = Inter({
   variable: "--font-body",
@@ -19,7 +20,7 @@ const displayFont = Playfair_Display({
   subsets: ["latin", "cyrillic"],
 });
 
-// Used only for the "A" in the Maison wordmark (components/layout/Logo.tsx) —
+// Used only for the "A" in the Martosoli wordmark (components/layout/Logo.tsx) —
 // Latin-only glyph, so no cyrillic subset needed.
 const scriptFont = Pinyon_Script({
   variable: "--font-script",
@@ -30,9 +31,10 @@ const scriptFont = Pinyon_Script({
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Maison — сучасний одяг для щоденного стилю",
+  metadataBase: new URL(siteUrl),
+  title: "Martosoli — сучасний одяг для щоденного стилю",
   description:
-    "Maison — інтернет-магазин одягу для жінок, чоловіків та дітей. Якісні тканини, продумана посадка, швидка доставка по Україні.",
+    "Martosoli — інтернет-магазин одягу для жінок і чоловіків. Якісні тканини, продумана посадка, швидка доставка по Україні.",
 };
 
 export default async function RootLayout({

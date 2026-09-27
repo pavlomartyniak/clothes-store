@@ -26,7 +26,7 @@ export function CategoryShowcase({
           return (
             <Reveal key={category.slug} delay={index * 0.08}>
               <Link
-                href={`/catalog?category=${encodeURIComponent(category.slug)}`}
+                href={`/catalog/${encodeURIComponent(category.slug)}`}
                 className="group relative flex aspect-3/4 flex-col justify-end overflow-hidden rounded-2xl"
               >
                 <ProductPhoto

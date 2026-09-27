@@ -17,8 +17,11 @@ export async function generateMetadata({
   const { id } = await params;
   const product = await getProductById(id);
   if (!product) return {};
+  const category = categoryName(product.category);
   return {
-    title: `${product.name} — Maison`,
+    title: category
+      ? `${product.name} — ${category} — Martosoli`
+      : `${product.name} — Martosoli`,
     description: product.description,
   };
 }
@@ -41,7 +44,7 @@ export default async function ProductPage({
         <Link href="/" className="shrink-0 hover:text-ink">Головна</Link>
         <LuChevronRight size={12} className="shrink-0" />
         <Link
-          href={`/catalog?category=${encodeURIComponent(categorySlug(product.category))}`}
+          href={`/catalog/${encodeURIComponent(categorySlug(product.category))}`}
           className="shrink-0 hover:text-ink"
         >
           {categoryName(product.category)}

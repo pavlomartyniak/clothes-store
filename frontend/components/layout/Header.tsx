@@ -18,7 +18,7 @@ export function Header({ categories }: { categories: Category[] }) {
   const navLinks = [
     { href: "/catalog", label: "Весь каталог" },
     ...categories.map((c) => ({
-      href: `/catalog?category=${encodeURIComponent(c.slug)}`,
+      href: `/catalog/${encodeURIComponent(c.slug)}`,
       label: c.name,
     })),
   ];

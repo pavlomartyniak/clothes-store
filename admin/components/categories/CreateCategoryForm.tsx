@@ -4,7 +4,6 @@ import { FormEvent } from "react";
 import { LuPlus } from "react-icons/lu";
 import { useCreateCategoryMutation } from "@/lib/queries/categories";
 import { extractErrorMessage } from "@/lib/http";
-import { slugify } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { inputClass } from "@/components/ui/Field";
 
@@ -20,7 +19,7 @@ export function CreateCategoryForm() {
     if (!name) return;
 
     createCategory.mutate(
-      { name, slug: slugify(name), description: description || undefined },
+      { name, description: description || undefined },
       { onSuccess: () => form.reset() }
     );
   }

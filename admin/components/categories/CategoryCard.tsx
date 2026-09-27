@@ -9,7 +9,6 @@ import {
   useRemoveSubcategoryMutation,
 } from "@/lib/queries/categories";
 import { extractErrorMessage } from "@/lib/http";
-import { slugify } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 
 export function CategoryCard({ category }: { category: Category }) {
@@ -28,7 +27,7 @@ export function CategoryCard({ category }: { category: Category }) {
     const name = String(new FormData(form).get("name") ?? "").trim();
     if (!name) return;
     addSubcategory.mutate(
-      { categoryId: category._id, name, slug: slugify(name) },
+      { categoryId: category._id, name },
       { onSuccess: () => form.reset() }
     );
   }

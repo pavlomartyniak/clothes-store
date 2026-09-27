@@ -6,6 +6,7 @@ import { Product, ProductDocument } from '../products/schemas/product.schema.js'
 import { CreateCategoryDto } from './dto/create-category.dto.js';
 import { UpdateCategoryDto } from './dto/update-category.dto.js';
 import { SubcategoryDto } from './dto/subcategory.dto.js';
+import { slugify } from '../common/slugify.js';
 
 @Injectable()
 export class CategoriesService {
@@ -17,7 +18,7 @@ export class CategoriesService {
   ) {}
 
   create(dto: CreateCategoryDto) {
-    return this.categoryModel.create(dto);
+    return this.categoryModel.create({ ...dto, slug: slugify(dto.name) });
   }
 
   findAll() {
@@ -57,7 +58,7 @@ export class CategoriesService {
     const category = await this.categoryModel
       .findByIdAndUpdate(
         id,
-        { $push: { subcategories: dto } },
+        { $push: { subcategories: { name: dto.name, slug: slugify(dto.name) } } },
         { new: true },
       )
       .exec();

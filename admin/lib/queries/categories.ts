@@ -21,7 +21,7 @@ export function useCategoriesQuery() {
 export function useCreateCategoryMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: { name: string; slug: string; description?: string }) => {
+    mutationFn: async (input: { name: string; description?: string }) => {
       const res = await http.post<Category>("/categories", input);
       return res.data;
     },
@@ -49,15 +49,12 @@ export function useAddSubcategoryMutation() {
     mutationFn: async ({
       categoryId,
       name,
-      slug,
     }: {
       categoryId: string;
       name: string;
-      slug: string;
     }) => {
       const res = await http.post<Category>(`/categories/${categoryId}/subcategories`, {
         name,
-        slug,
       });
       return res.data;
     },

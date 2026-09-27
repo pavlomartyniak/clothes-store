@@ -17,7 +17,7 @@ type SearchParams = Promise<{
 }>;
 
 export const metadata = {
-  title: "Каталог — Maison",
+  title: "Каталог — Martosoli",
 };
 
 export const revalidate = 60;
