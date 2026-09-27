@@ -24,10 +24,10 @@ export async function generateMetadata({
   if (!category) return {};
 
   return {
-    title: truncate(`${category.name} купити в Києві та Україні — Martosoli`, 60),
+    title: truncate(`Брендові ${category.name.toLowerCase()} купити в Україні — Martosoli`, 60),
     description: truncate(
       category.description ??
-        `${category.name} — каталог Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+        `Оригінальні ${category.name.toLowerCase()} топових люксових брендів. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
       160
     ),
     alternates: { canonical: `${siteUrl}/${slug}` },

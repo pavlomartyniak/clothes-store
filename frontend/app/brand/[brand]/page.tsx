@@ -32,9 +32,9 @@ export async function generateMetadata({
   if (!brand) return {};
 
   return {
-    title: truncate(`${brand.name} купити в Україні — Martosoli`, 60),
+    title: truncate(`${brand.name} оригінал купити в Україні — Martosoli`, 60),
     description: truncate(
-      `Товари бренду ${brand.name} в каталозі Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+      `Оригінальні речі ${brand.name} в каталозі Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
       160
     ),
     alternates: { canonical: `${siteUrl}/brand/${slug}` },

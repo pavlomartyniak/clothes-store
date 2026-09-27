@@ -40,7 +40,7 @@ export async function generateMetadata({
 
   const title = truncate(`${product.name} — Martosoli`, 60);
   const description = truncate(
-    `Купити ${product.name} в Україні за ${formatPrice(product.price)} в Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+    `Оригінальний ${product.name} — купити в Україні за ${formatPrice(product.price)} в Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
     160
   );
   const image = product.images[0]?.url;
