@@ -6,7 +6,6 @@ import { LuShoppingBag } from "react-icons/lu";
 import { useCart } from "@/lib/cart-context";
 import { useProducts } from "@/lib/products-context";
 import { formatPrice, cn } from "@/lib/utils";
-import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from "@/lib/shipping";
 import { extractErrorMessage, useCreateOrderMutation } from "@/lib/queries/checkout";
 import { ProductPhoto } from "@/components/product/ProductPhoto";
 import { Button, LinkButton } from "@/components/ui/Button";
@@ -21,8 +20,6 @@ export default function CheckoutPage() {
   const [delivery, setDelivery] = useState<Delivery>("np-branch");
   const [payment, setPayment] = useState<Payment>("cod");
   const createOrder = useCreateOrderMutation();
-
-  const shipping = totalPrice >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -58,7 +55,6 @@ export default function CheckoutPage() {
         paymentMethod: payment,
         items: orderItems,
         totalPrice,
-        shippingCost: shipping,
         comment: String(formData.get("comment") ?? "") || undefined,
       });
 
@@ -182,14 +178,10 @@ export default function CheckoutPage() {
               <span>Товари</span>
               <span>{formatPrice(totalPrice)}</span>
             </div>
-            <div className="flex justify-between text-ink-soft">
-              <span>Доставка</span>
-              <span>{shipping === 0 ? "Безкоштовно" : formatPrice(shipping)}</span>
-            </div>
           </div>
           <div className="flex justify-between border-t border-line pt-4 text-base font-semibold text-ink">
             <span>Разом</span>
-            <span>{formatPrice(totalPrice + shipping)}</span>
+            <span>{formatPrice(totalPrice)}</span>
           </div>
           {createOrder.isError && (
             <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-accent-dark">

@@ -8,7 +8,6 @@ import { formatPrice } from "@/lib/utils";
 import { ProductPhoto } from "@/components/product/ProductPhoto";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { LinkButton } from "@/components/ui/Button";
-import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from "@/lib/shipping";
 
 export default function CartPage() {
   const { lines, removeItem, updateQuantity, totalPrice } = useCart();
@@ -26,8 +25,6 @@ export default function CartPage() {
       </div>
     );
   }
-
-  const shipping = totalPrice >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
 
   return (
     <div className="container-page py-10 sm:py-14">
@@ -81,19 +78,10 @@ export default function CartPage() {
               <span>Товари</span>
               <span>{formatPrice(totalPrice)}</span>
             </div>
-            <div className="flex justify-between text-ink-soft">
-              <span>Доставка</span>
-              <span>{shipping === 0 ? "Безкоштовно" : formatPrice(shipping)}</span>
-            </div>
-            {shipping > 0 && (
-              <p className="text-xs text-accent">
-                Додайте товарів ще на {formatPrice(FREE_SHIPPING_THRESHOLD - totalPrice)} для безкоштовної доставки
-              </p>
-            )}
           </div>
           <div className="flex justify-between border-t border-line pt-4 text-base font-semibold text-ink">
             <span>Разом</span>
-            <span>{formatPrice(totalPrice + shipping)}</span>
+            <span>{formatPrice(totalPrice)}</span>
           </div>
           <LinkButton href="/checkout" size="lg" className="w-full">
             Оформити замовлення

@@ -2,16 +2,19 @@ import { Product, brandName } from "./types";
 import { siteUrl } from "./site";
 import { optimizedImageUrl } from "./cloudinary";
 import { getAssetUrl } from "./assets";
-import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from "./shipping";
 
 /**
  * Real policy (see /returns): the buyer inspects the parcel at the Nova
- * Poshta branch before accepting/paying for it and can refuse it there with
- * no conditions attached — but once accepted, it isn't returnable. Schema.org
+ * Poshta branch before accepting it and can refuse it there with no
+ * conditions attached — but once accepted, it isn't returnable. Schema.org
  * doesn't have a vocabulary slot for "inspect before you accept", only for a
  * post-acceptance return window, so MerchantReturnNotPermitted is the
  * accurate mapping for what happens after acceptance; the pre-acceptance
  * inspection right is explained in prose via merchantReturnLink.
+ *
+ * No OfferShippingDetails here deliberately — the store doesn't charge or
+ * quote a shipping price through this system (Nova Poshta bills the
+ * recipient directly), so there's no honest rate to publish.
  */
 const RETURN_POLICY = {
   "@type": "MerchantReturnPolicy",
@@ -19,20 +22,6 @@ const RETURN_POLICY = {
   merchantReturnLink: `${siteUrl}/returns`,
   applicableCountry: "UA",
 };
-
-function shippingDetails(price: number) {
-  const rate = price >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  return {
-    "@type": "OfferShippingDetails",
-    shippingRate: { "@type": "MonetaryAmount", value: rate, currency: "UAH" },
-    shippingDestination: { "@type": "DefinedRegion", addressCountry: "UA" },
-    deliveryTime: {
-      "@type": "ShippingDeliveryTime",
-      handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "DAY" },
-      transitTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 3, unitCode: "DAY" },
-    },
-  };
-}
 
 export function productSchema(product: Product, url: string) {
   const brand = brandName(product.brand);
@@ -54,7 +43,6 @@ export function productSchema(product: Product, url: string) {
         ? "https://schema.org/OutOfStock"
         : "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
-      shippingDetails: shippingDetails(product.price),
       hasMerchantReturnPolicy: RETURN_POLICY,
     },
   };

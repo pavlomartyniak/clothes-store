@@ -1,9 +1,9 @@
+import Link from "next/link";
 import { siteUrl } from "@/lib/site";
 
 export const metadata = {
   title: "Доставка та оплата — Martosoli",
-  description:
-    "Умови доставки Новою поштою та способи оплати замовлень у Martosoli.",
+  description: "Доставка Новою поштою по всій Україні.",
   alternates: { canonical: `${siteUrl}/delivery` },
 };
 
@@ -15,13 +15,7 @@ export default function DeliveryPage() {
       <section className="mt-10 space-y-3">
         <h2 className="font-display text-xl text-ink">Доставка</h2>
         <p className="text-sm leading-relaxed text-ink-soft">
-          Відправляємо замовлення протягом 1 робочого дня після підтвердження.
-          Доставка Новою поштою — у відділення або поштомат, а також кур&apos;єром
-          за вказаною адресою. Термін доставки — 1–3 дні залежно від міста.
-        </p>
-        <p className="text-sm leading-relaxed text-ink-soft">
-          На відділенні Нової пошти можна оглянути та приміряти товар перед
-          оплатою.
+          Доставка Новою поштою по всій Україні.
         </p>
       </section>
 
@@ -31,6 +25,19 @@ export default function DeliveryPage() {
           Доступні два способи оплати: оплата карткою онлайн під час
           оформлення замовлення або оплата при отриманні (накладений платіж
           Нової пошти).
+        </p>
+      </section>
+
+      <section className="mt-8 space-y-3">
+        <h2 className="font-display text-xl text-ink">Огляд і повернення</h2>
+        <p className="text-sm leading-relaxed text-ink-soft">
+          Повернення можливе лише під час огляду товару на відділенні Нової
+          пошти, до отримання посилки. Якщо ви вже забрали посилку з
+          відділення — повернути товар не можна. Детальніше на сторінці{" "}
+          <Link href="/returns" className="text-accent hover:underline">
+            «Обмін і повернення»
+          </Link>
+          .
         </p>
       </section>
 
