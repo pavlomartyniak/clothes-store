@@ -9,21 +9,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getBrands(),
   ]);
 
+  // No real "last modified" date for these — omitted rather than stamped
+  // with the build time, which Google stops trusting as a lastmod signal.
   const staticRoutes: MetadataRoute.Sitemap = ["", "/catalog", "/brands", "/delivery", "/returns"].map(
     (path) => ({
       url: `${siteUrl}${path}`,
-      lastModified: new Date(),
     })
   );
 
   const categoryRoutes: MetadataRoute.Sitemap = categories.map((category) => ({
     url: `${siteUrl}/${category.slug}`,
-    lastModified: new Date(),
+    lastModified: new Date(category.updatedAt),
   }));
 
   const brandRoutes: MetadataRoute.Sitemap = brands.map((brand) => ({
     url: `${siteUrl}/brand/${brand.slug}`,
-    lastModified: new Date(),
+    lastModified: new Date(brand.updatedAt),
   }));
 
   // Sold-out products keep serving their page (never delisted/removed), but

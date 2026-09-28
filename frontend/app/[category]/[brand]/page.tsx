@@ -31,13 +31,19 @@ export async function generateMetadata({
   );
   if (!category || !brand) return {};
 
+  const title = `${category.name} ${brand.name} купити в Києві та Україні — Martosoli`;
+  const description = truncate(
+    `${category.name} бренду ${brand.name} в каталозі Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+    160
+  );
+  const url = `${siteUrl}/${category.slug}/${brand.slug}`;
+
   return {
-    title: truncate(`${category.name} ${brand.name} купити в Києві та Україні — Martosoli`, 60),
-    description: truncate(
-      `${category.name} бренду ${brand.name} в каталозі Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
-      160
-    ),
-    alternates: { canonical: `${siteUrl}/${category.slug}/${brand.slug}` },
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

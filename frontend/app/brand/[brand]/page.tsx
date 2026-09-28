@@ -31,16 +31,18 @@ export async function generateMetadata({
   const { brand } = await getBrandProducts(slug);
   if (!brand) return {};
 
+  const title = `${brand.name} 1:1 оригінал купити в Україні — Martosoli`;
+  const description = truncate(
+    `Оригінальні 1:1 речі ${brand.name} в каталозі Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+    160,
+  );
+
   return {
-    title: truncate(
-      `${brand.name} 1:1 оригінал купити в Україні — Martosoli`,
-      60,
-    ),
-    description: truncate(
-      `Оригінальні 1:1 речі ${brand.name} в каталозі Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
-      160,
-    ),
+    title,
+    description,
     alternates: { canonical: `${siteUrl}/brand/${slug}` },
+    openGraph: { title, description, url: `${siteUrl}/brand/${slug}` },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

@@ -12,6 +12,18 @@ import { JsonLd } from "@/components/JsonLd";
 
 export const revalidate = 60;
 
+// A plain category name ("Светри") makes for a thin H1 — pair it with what
+// the shopper is actually looking for.
+const CATEGORY_H1: Record<string, string> = {
+  kostiumy: "Жіночі костюми та комплекти",
+  kurtky: "Жіночі куртки",
+  palta: "Жіночі пальта",
+  pidzhaky: "Жіночі піджаки та блейзери",
+  svetry: "Жіночі светри та кардигани",
+  sumky: "Жіночі сумки",
+  shtany: "Жіночі штани",
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -23,17 +35,19 @@ export async function generateMetadata({
   const category = categories.find((c) => c.slug === slug);
   if (!category) return {};
 
+  const title = `Брендові 1:1 ${category.name.toLowerCase()} купити в Україні — Martosoli`;
+  const description = truncate(
+    category.description ??
+      `Оригінальні 1:1 ${category.name.toLowerCase()} топових люксових брендів. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+    160,
+  );
+
   return {
-    title: truncate(
-      `Брендові 1:1 ${category.name.toLowerCase()} купити в Україні — Martosoli`,
-      60,
-    ),
-    description: truncate(
-      category.description ??
-        `Оригінальні 1:1 ${category.name.toLowerCase()} топових люксових брендів. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
-      160,
-    ),
+    title,
+    description,
     alternates: { canonical: `${siteUrl}/${slug}` },
+    openGraph: { title, description, url: `${siteUrl}/${slug}` },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -77,7 +91,7 @@ export default async function CategoryPage({
             Каталог
           </span>
           <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
-            {category.name}
+            {CATEGORY_H1[category.slug] ?? category.name}
           </h1>
           {category.description && (
             <p className="mt-1 text-sm text-ink-soft">{category.description}</p>

@@ -38,12 +38,13 @@ export async function generateMetadata({
   const product = await resolveProduct(decodeURIComponent(rawSlug));
   if (!product) return {};
 
-  const title = truncate(`${product.name} — Martosoli`, 60);
+  const title = `${product.name} — Martosoli`;
   const description = truncate(
     `Оригінальний 1:1 ${product.name} — купити в Україні за ${formatPrice(product.price)} в Martosoli. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
     160,
   );
   const image = product.images[0]?.url;
+  const ogImages = image ? [{ url: ogImageUrl(image), width: 1200, height: 630 }] : undefined;
 
   return {
     title,
@@ -54,9 +55,13 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      images: image
-        ? [{ url: ogImageUrl(image), width: 1200, height: 630 }]
-        : undefined,
+      images: ogImages,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImages,
     },
     other: {
       "product:price:amount": String(product.price),

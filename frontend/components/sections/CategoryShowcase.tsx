@@ -31,6 +31,7 @@ export function CategoryShowcase({
               >
                 <ProductPhoto
                   product={sample}
+                  alt=""
                   className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-ink/75 via-ink/10 to-transparent" />

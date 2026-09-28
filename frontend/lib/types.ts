@@ -12,6 +12,7 @@ export type Category = {
   /** Long-form SEO body copy shown under the product grid. */
   content?: string;
   subcategories: Subcategory[];
+  updatedAt: string;
 };
 
 export type ProductColor = {
@@ -31,6 +32,7 @@ export type Brand = {
   imageUrl?: string;
   /** Long-form SEO body copy shown under the product grid. */
   content?: string;
+  updatedAt: string;
 };
 
 export type Product = {

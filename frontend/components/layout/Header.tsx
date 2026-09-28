@@ -48,7 +48,11 @@ export function Header({ categories }: { categories: Category[] }) {
             <LuMenu size={22} />
           </button>
 
-          <Link href="/" className="font-display text-2xl tracking-wide text-ink">
+          <Link
+            href="/"
+            aria-label="Martosoli"
+            className="font-display text-2xl tracking-wide text-ink"
+          >
             <Logo />
           </Link>
 
