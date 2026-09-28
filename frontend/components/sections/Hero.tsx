@@ -16,7 +16,7 @@ export function Hero({ products }: { products: Product[] }) {
         <div className="absolute inset-0 h-full w-full overflow-hidden">
           <Image
             src="/images/hero.jpg"
-            alt=""
+            alt="Модель у светрі з леопардовим принтом бренду Palm Angels"
             fill
             priority
             sizes="(min-width: 1024px) 55vw, 100vw"
