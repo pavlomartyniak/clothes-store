@@ -33,7 +33,6 @@ export function Header({ categories }: { categories: Category[] }) {
               <div key={i} className="flex gap-16">
                 <span>Доставка по всій Україні Новою Поштою</span>
                 <span>Огляд і примірка при отриманні на пошті</span>
-                <span>Нова колекція вже в каталозі</span>
               </div>
             ))}
           </div>

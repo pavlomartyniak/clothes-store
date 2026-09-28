@@ -14,13 +14,13 @@ export function Newsletter() {
   return (
     <section className="border-t border-line bg-ink py-16 text-paper sm:py-20">
       <div className="container-page flex flex-col items-center gap-6 text-center">
-        <h2 className="font-display text-3xl sm:text-4xl">Знижка 10% на перше замовлення</h2>
+        <h2 className="font-display text-3xl sm:text-4xl">Будьте в курсі нових надходжень</h2>
         <p className="max-w-md text-sm text-paper/75">
-          Підпишіться на розсилку та першими дізнавайтесь про нові колекції та закриті розпродажі.
+          Підпишіться на розсилку та першими дізнавайтесь про нові надходження та закриті розпродажі.
         </p>
         {status === "done" ? (
           <p className="text-sm font-medium text-accent">
-            Дякуємо! Перевірте пошту — промокод уже там.
+            Дякуємо! Ви підписані на розсилку.
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="flex w-full max-w-md flex-col gap-3 sm:flex-row">

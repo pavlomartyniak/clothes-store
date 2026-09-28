@@ -25,9 +25,6 @@ export function Hero({ products }: { products: Product[] }) {
         </div>
         <div className="absolute inset-0 bg-linear-to-t from-ink/70 via-ink/10 to-transparent" />
         <Reveal className="relative max-w-md space-y-5 text-paper">
-          <span className="text-xs uppercase tracking-[0.3em] text-paper/80">
-            Осіння колекція 2026
-          </span>
           <h1 className="font-display text-4xl leading-tight sm:text-5xl">
             Оригінальний одяг люксових брендів для щоденного стилю
           </h1>
