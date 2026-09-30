@@ -1,9 +1,15 @@
 import Link from "next/link";
-import { LuMail } from "react-icons/lu";
+import { FaTelegram } from "react-icons/fa";
 import { Brand, Category } from "@/lib/types";
 import { Logo } from "./Logo";
 
-export function Footer({ categories, brands }: { categories: Category[]; brands: Brand[] }) {
+export function Footer({
+  categories,
+  brands,
+}: {
+  categories: Category[];
+  brands: Brand[];
+}) {
   return (
     <footer className="border-t border-line bg-paper-soft">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
@@ -35,7 +41,10 @@ export function Footer({ categories, brands }: { categories: Category[]; brands:
             <ul className="space-y-3 text-sm text-ink-soft">
               {brands.map((b) => (
                 <li key={b.slug}>
-                  <Link href={`/brand/${encodeURIComponent(b.slug)}`} className="hover:text-ink">
+                  <Link
+                    href={`/brand/${encodeURIComponent(b.slug)}`}
+                    className="hover:text-ink"
+                  >
                     {b.name}
                   </Link>
                 </li>
@@ -74,7 +83,15 @@ export function Footer({ categories, brands }: { categories: Category[]; brands:
           <h4 className="mb-4 text-sm font-semibold text-ink">Контакти</h4>
           <ul className="space-y-3 text-sm text-ink-soft">
             <li className="flex items-center gap-2">
-              <LuMail size={15} /> hello@martosoli.com
+              <FaTelegram size={15} />
+              <a
+                href="https://t.me/fuji_ft"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-ink"
+              >
+                Написати в Telegram
+              </a>
             </li>
           </ul>
         </div>
@@ -82,7 +99,9 @@ export function Footer({ categories, brands }: { categories: Category[]; brands:
 
       <div className="border-t border-line py-5">
         <div className="container-page flex flex-col items-center justify-between gap-2 text-xs text-ink-soft sm:flex-row">
-          <span>© {new Date().getFullYear()} Martosoli. Усі права захищені.</span>
+          <span>
+            © {new Date().getFullYear()} Martosoli. Усі права захищені.
+          </span>
           <span>Дизайн і розробка — власна команда Martosoli</span>
         </div>
       </div>

@@ -10,10 +10,14 @@ export const metadata = {
 export default function ReturnsPage() {
   return (
     <div className="container-page max-w-2xl py-16 sm:py-20">
-      <h1 className="font-display text-3xl text-ink sm:text-4xl">Обмін і повернення</h1>
+      <h1 className="font-display text-3xl text-ink sm:text-4xl">
+        Обмін і повернення
+      </h1>
 
       <section className="mt-10 space-y-3">
-        <h2 className="font-display text-xl text-ink">Огляд перед отриманням</h2>
+        <h2 className="font-display text-xl text-ink">
+          Огляд перед отриманням
+        </h2>
         <p className="text-sm leading-relaxed text-ink-soft">
           Усі замовлення відправляються Новою поштою. На відділенні ви можете
           оглянути товар до того, як прийняти й оплатити посилку — перевірте
@@ -33,10 +37,20 @@ export default function ReturnsPage() {
       </section>
 
       <section className="mt-8 space-y-3">
-        <h2 className="font-display text-xl text-ink">Питання щодо замовлення</h2>
+        <h2 className="font-display text-xl text-ink">
+          Питання щодо замовлення
+        </h2>
         <p className="text-sm leading-relaxed text-ink-soft">
-          Напишіть на hello@martosoli.com, вказавши номер замовлення — відповідаємо
-          у робочі дні.
+          Напишіть нам у{" "}
+          <a
+            href="https://t.me/fuji_ft"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-ink underline"
+          >
+            Telegram
+          </a>
+          , вказавши номер замовлення — відповідаємо у робочі дні.
         </p>
       </section>
     </div>

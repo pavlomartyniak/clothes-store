@@ -31,9 +31,10 @@ const scriptFont = Pinyon_Script({
 
 export const revalidate = 60;
 
-const defaultTitle = "Martosoli — оригінальний одяг люксових брендів";
+const defaultTitle =
+  "Martosoli — одяг найвищої якості, 1:1 оригінальний люксових брендів";
 const defaultDescription =
-  "Martosoli — оригінальний одяг преміальних брендів: Chanel, Gucci, Prada, Dior та інші. Доставка Новою поштою по всій Україні, огляд при отриманні.";
+  "Martosoli — одяг найвищої якості, 1:1 оригінальний одяг преміальних брендів: Chanel, Gucci, Prada, Dior та інші. Доставка Новою поштою по всій Україні, огляд при отриманні.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -45,11 +46,13 @@ export const metadata: Metadata = {
     description: defaultDescription,
     type: "website",
     locale: "uk_UA",
+    images: [{ url: "/images/hero.jpg", width: 2560, height: 1440 }],
   },
   twitter: {
     card: "summary_large_image",
     title: defaultTitle,
     description: defaultDescription,
+    images: ["/images/hero.jpg"],
   },
 };
 
@@ -71,7 +74,11 @@ export default async function RootLayout({
     productCountBySlug.set(slug, (productCountBySlug.get(slug) ?? 0) + 1);
   }
   const topBrands = [...brands]
-    .sort((a, b) => (productCountBySlug.get(b.slug) ?? 0) - (productCountBySlug.get(a.slug) ?? 0))
+    .sort(
+      (a, b) =>
+        (productCountBySlug.get(b.slug) ?? 0) -
+        (productCountBySlug.get(a.slug) ?? 0),
+    )
     .slice(0, 6);
 
   return (
@@ -80,7 +87,10 @@ export default async function RootLayout({
       className={`${bodyFont.variable} ${displayFont.variable} ${scriptFont.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col font-sans" suppressHydrationWarning>
+      <body
+        className="flex min-h-full flex-col font-sans"
+        suppressHydrationWarning
+      >
         <Providers>
           <ProductsProvider products={products}>
             <CartProvider>
