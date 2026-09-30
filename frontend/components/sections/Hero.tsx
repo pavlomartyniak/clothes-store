@@ -15,7 +15,7 @@ export function Hero({ products }: { products: Product[] }) {
       <div className="relative flex flex-col justify-end overflow-hidden rounded-3xl bg-paper-soft p-8 sm:p-12 lg:min-h-[560px]">
         <div className="absolute inset-0 h-full w-full overflow-hidden">
           <Image
-            src="/images/hero.webp"
+            src="/images/hero.jpg"
             alt="Модель у светрі з леопардовим принтом бренду Palm Angels"
             fill
             priority
