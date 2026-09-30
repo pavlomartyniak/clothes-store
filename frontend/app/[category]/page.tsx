@@ -35,10 +35,10 @@ export async function generateMetadata({
   const category = categories.find((c) => c.slug === slug);
   if (!category) return {};
 
-  const title = `Брендові 1:1 ${category.name.toLowerCase()} купити в Україні — Martosoli`;
+  const title = `${category.name} брендові купити в Україні — Martosoli`;
   const description = truncate(
     category.description ??
-      `Оригінальні 1:1 ${category.name.toLowerCase()} топових люксових брендів. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
+      `${category.name} оригінальні 1:1  топових люксових брендів. Доставка Новою поштою по всій Україні, огляд і примірка при отриманні.`,
     160,
   );
 
