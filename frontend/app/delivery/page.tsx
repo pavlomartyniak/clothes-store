@@ -44,7 +44,7 @@ export default function DeliveryPage() {
       <section className="mt-8 space-y-3">
         <h2 className="font-display text-xl text-ink">Питання щодо замовлення</h2>
         <p className="text-sm leading-relaxed text-ink-soft">
-          Напишіть на hello@martosoli.ua — відповідаємо у робочі дні.
+          Напишіть на hello@martosoli.com — відповідаємо у робочі дні.
         </p>
       </section>
     </div>

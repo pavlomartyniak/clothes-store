@@ -74,7 +74,7 @@ export function Footer({ categories, brands }: { categories: Category[]; brands:
           <h4 className="mb-4 text-sm font-semibold text-ink">Контакти</h4>
           <ul className="space-y-3 text-sm text-ink-soft">
             <li className="flex items-center gap-2">
-              <LuMail size={15} /> hello@martosoli.ua
+              <LuMail size={15} /> hello@martosoli.com
             </li>
           </ul>
         </div>
