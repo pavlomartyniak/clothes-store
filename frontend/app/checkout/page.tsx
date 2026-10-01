@@ -1,11 +1,13 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LuShoppingBag } from "react-icons/lu";
 import { useCart } from "@/lib/cart-context";
 import { useProducts } from "@/lib/products-context";
+import { brandName, categoryName } from "@/lib/types";
 import { formatPrice, cn } from "@/lib/utils";
+import { ecommerceItem, trackEvent } from "@/lib/gtag";
 import { extractErrorMessage, useCreateOrderMutation } from "@/lib/queries/checkout";
 import { ProductPhoto } from "@/components/product/ProductPhoto";
 import { Button, LinkButton } from "@/components/ui/Button";
@@ -20,6 +22,31 @@ export default function CheckoutPage() {
   const [delivery, setDelivery] = useState<Delivery>("np-branch");
   const [payment, setPayment] = useState<Payment>("cod");
   const createOrder = useCreateOrderMutation();
+
+  const trackedBeginCheckout = useRef(false);
+  useEffect(() => {
+    if (trackedBeginCheckout.current || lines.length === 0) return;
+    trackedBeginCheckout.current = true;
+    trackEvent("begin_checkout", {
+      currency: "UAH",
+      value: totalPrice,
+      items: lines
+        .map((line) => {
+          const product = products.find((p) => p.slug === line.slug);
+          if (!product) return null;
+          return ecommerceItem({
+            id: product._id,
+            name: product.name,
+            brand: brandName(product.brand),
+            category: categoryName(product.category),
+            price: product.price,
+            quantity: line.quantity,
+          });
+        })
+        .filter((item): item is NonNullable<typeof item> => item !== null),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lines, products]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -56,6 +83,20 @@ export default function CheckoutPage() {
         items: orderItems,
         totalPrice,
         comment: String(formData.get("comment") ?? "") || undefined,
+      });
+
+      trackEvent("purchase", {
+        transaction_id: order.orderNumber,
+        currency: "UAH",
+        value: totalPrice,
+        items: orderItems.map((item) =>
+          ecommerceItem({
+            id: item.productId,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+          })
+        ),
       });
 
       clearCart();

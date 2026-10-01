@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Product } from "@/lib/types";
+import { useEffect, useState } from "react";
+import { brandName, categoryName, Product } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
+import { ecommerceItem, trackEvent } from "@/lib/gtag";
 import { ProductGallery } from "./ProductGallery";
 import { AddToCartPanel } from "./AddToCartPanel";
 import { Badge } from "@/components/ui/Badge";
@@ -10,6 +11,23 @@ import { Badge } from "@/components/ui/Badge";
 export function ProductViewer({ product }: { product: Product }) {
   const [activeColorIndex, setActiveColorIndex] = useState(0);
   const activeColor = product.colors[activeColorIndex] ?? product.colors[0];
+
+  useEffect(() => {
+    trackEvent("view_item", {
+      currency: "UAH",
+      value: product.price,
+      items: [
+        ecommerceItem({
+          id: product._id,
+          name: product.name,
+          brand: brandName(product.brand),
+          category: categoryName(product.category),
+          price: product.price,
+        }),
+      ],
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product._id]);
 
   return (
     <>

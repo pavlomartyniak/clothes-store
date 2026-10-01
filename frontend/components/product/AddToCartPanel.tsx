@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { LuCheck, LuShoppingBag } from "react-icons/lu";
-import { Product } from "@/lib/types";
+import { brandName, categoryName, Product } from "@/lib/types";
 import { useCart } from "@/lib/cart-context";
+import { ecommerceItem, trackEvent } from "@/lib/gtag";
 import { Button } from "@/components/ui/Button";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { cn } from "@/lib/utils";
@@ -75,7 +76,23 @@ export function AddToCartPanel({
       <Button
         size="lg"
         className="w-full"
-        onClick={() => addItem({ slug: product.slug, size, color, quantity })}
+        onClick={() => {
+          addItem({ slug: product.slug, size, color, quantity });
+          trackEvent("add_to_cart", {
+            currency: "UAH",
+            value: product.price * quantity,
+            items: [
+              ecommerceItem({
+                id: product._id,
+                name: product.name,
+                brand: brandName(product.brand),
+                category: categoryName(product.category),
+                price: product.price,
+                quantity,
+              }),
+            ],
+          });
+        }}
       >
         <LuShoppingBag size={18} />
         Додати в кошик
