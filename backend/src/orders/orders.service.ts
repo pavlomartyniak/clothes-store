@@ -3,12 +3,16 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryFilter } from 'mongoose';
 import { Order, OrderDocument, OrderStatus } from './schemas/order.schema.js';
 import { CreateOrderDto } from './dto/create-order.dto.js';
+import { ProductsService } from '../products/products.service.js';
+
+const SITE_URL = 'https://martosoli.com';
 
 @Injectable()
 export class OrdersService {
   constructor(
     @InjectModel(Order.name)
     private readonly orderModel: Model<OrderDocument>,
+    private readonly productsService: ProductsService,
   ) {}
 
   private async generateOrderNumber(): Promise<string> {
@@ -36,11 +40,28 @@ export class OrdersService {
       order.deliveryMethod === 'np-branch' ? 'Нова пошта, відділення' : "Кур'єром";
     const paymentLabel = order.paymentMethod === 'cod' ? 'При отриманні' : 'Карткою онлайн';
 
-    const itemsText = order.items
-      .map(
-        (item) =>
-          `• ${item.name} — ${item.size}, ${item.color}, ${item.quantity} шт — ${item.price * item.quantity} грн`,
-      )
+    // Best-effort lookup — a deleted/missing product just means no photo/link for that line.
+    const resolvedItems = await Promise.all(
+      order.items.map(async (item) => {
+        if (!item.productId) return { item, image: undefined, url: undefined };
+        try {
+          const product = await this.productsService.findOne(item.productId);
+          return {
+            item,
+            image: product.images[0]?.url,
+            url: `${SITE_URL}/product/${product.slug}`,
+          };
+        } catch {
+          return { item, image: undefined, url: undefined };
+        }
+      }),
+    );
+
+    const itemsText = resolvedItems
+      .map(({ item, url }) => {
+        const line = `• ${item.name} — ${item.size}, ${item.color}, ${item.quantity} шт — ${item.price * item.quantity} грн`;
+        return url ? `${line}\n  ${url}` : line;
+      })
       .join('\n');
 
     const text = [
@@ -61,7 +82,29 @@ export class OrdersService {
       ...(order.comment ? ['', `Коментар: ${order.comment}`] : []),
     ].join('\n');
 
+    const photos = [...new Set(resolvedItems.map((r) => r.image).filter(Boolean))].slice(
+      0,
+      10,
+    ) as string[];
+
     try {
+      if (photos.length === 1) {
+        await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: chatId, photo: photos[0] }),
+        });
+      } else if (photos.length > 1) {
+        await fetch(`https://api.telegram.org/bot${token}/sendMediaGroup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            media: photos.map((url) => ({ type: 'photo', media: url })),
+          }),
+        });
+      }
+
       await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
