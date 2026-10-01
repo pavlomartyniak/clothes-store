@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Pinyon_Script, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
 import { ProductsProvider } from "@/lib/products-context";
@@ -90,6 +91,22 @@ export default async function RootLayout({
         className="flex min-h-full flex-col font-sans"
         suppressHydrationWarning
       >
+        {process.env.NODE_ENV === "production" && (
+          <>
+            <Script
+              src="https://www.googletagmanager.com/gtag/js?id=G-547YQ4PB03"
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-547YQ4PB03');
+              `}
+            </Script>
+          </>
+        )}
         <Providers>
           <ProductsProvider products={products}>
             <CartProvider>
