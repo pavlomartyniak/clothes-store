@@ -25,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const brandRoutes: MetadataRoute.Sitemap = brands.map((brand) => ({
     url: `${siteUrl}/brand/${brand.slug}`,
     lastModified: new Date(brand.updatedAt),
+    ...(brand.imageUrl ? { images: [brand.imageUrl] } : {}),
   }));
 
   // Sold-out products keep serving their page (never delisted/removed), but
@@ -35,6 +36,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .map((product) => ({
       url: `${siteUrl}/product/${encodeURIComponent(product.slug)}`,
       lastModified: new Date(product.updatedAt),
+      ...(product.images.length > 0
+        ? { images: product.images.map((img) => img.url) }
+        : {}),
     }));
 
   return [...staticRoutes, ...categoryRoutes, ...brandRoutes, ...productRoutes];
