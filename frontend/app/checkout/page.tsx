@@ -12,14 +12,12 @@ import { extractErrorMessage, useCreateOrderMutation } from "@/lib/queries/check
 import { ProductPhoto } from "@/components/product/ProductPhoto";
 import { Button, LinkButton } from "@/components/ui/Button";
 
-type Delivery = "np-branch" | "courier";
 type Payment = "cod" | "card";
 
 export default function CheckoutPage() {
   const { lines, totalPrice, clearCart } = useCart();
   const products = useProducts();
   const router = useRouter();
-  const [delivery, setDelivery] = useState<Delivery>("np-branch");
   const [payment, setPayment] = useState<Payment>("cod");
   const createOrder = useCreateOrderMutation();
 
@@ -76,7 +74,7 @@ export default function CheckoutPage() {
         lastName: String(formData.get("lastName") ?? ""),
         phone: String(formData.get("phone") ?? ""),
         email: String(formData.get("email") ?? ""),
-        deliveryMethod: delivery,
+        deliveryMethod: "np-branch",
         city: String(formData.get("city") ?? ""),
         address: String(formData.get("address") ?? ""),
         paymentMethod: payment,
@@ -136,28 +134,10 @@ export default function CheckoutPage() {
 
           <fieldset className="space-y-4">
             <legend className="mb-1 text-lg font-medium text-ink">Доставка</legend>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <RadioCard
-                label="Нова пошта, відділення"
-                description="1–2 дні, від 60 грн"
-                checked={delivery === "np-branch"}
-                onClick={() => setDelivery("np-branch")}
-              />
-              <RadioCard
-                label="Кур'єром за адресою"
-                description="1–3 дні, від 120 грн"
-                checked={delivery === "courier"}
-                onClick={() => setDelivery("courier")}
-              />
-            </div>
+            <p className="text-sm text-ink-soft">Нова пошта, відділення</p>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Місто" name="city" autoComplete="address-level2" required />
-              <Field
-                label={delivery === "np-branch" ? "Номер відділення" : "Адреса, квартира"}
-                name="address"
-                autoComplete="street-address"
-                required
-              />
+              <Field label="Номер відділення" name="address" autoComplete="street-address" required />
             </div>
           </fieldset>
 
