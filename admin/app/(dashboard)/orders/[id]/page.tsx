@@ -2,12 +2,16 @@
 
 import { use } from "react";
 import Link from "next/link";
-import { LuArrowLeft } from "react-icons/lu";
+import { LuArrowLeft, LuExternalLink } from "react-icons/lu";
 import { useOrderQuery } from "@/lib/queries/orders";
+import { useProductsQuery } from "@/lib/queries/products";
 import { Order } from "@/lib/types";
 import { formatDate, formatPrice } from "@/lib/utils";
+import { getAssetUrl } from "@/lib/assets";
 import { OrderStatusSelect } from "@/components/orders/OrderStatusSelect";
 import { DeleteOrderButton } from "@/components/orders/DeleteOrderButton";
+
+const SITE_URL = "https://martosoli.com";
 
 const DELIVERY_LABELS: Record<Order["deliveryMethod"], string> = {
   "np-branch": "Нова пошта, відділення",
@@ -26,6 +30,7 @@ export default function OrderDetailPage({
 }) {
   const { id } = use(params);
   const { data: order, isLoading } = useOrderQuery(id);
+  const { data: products = [] } = useProductsQuery();
 
   if (isLoading || !order) {
     return <p className="text-sm text-ink-soft">Завантаження...</p>;
@@ -97,19 +102,45 @@ export default function OrderDetailPage({
       <div className="mt-6 rounded-2xl border border-line bg-paper p-5">
         <h2 className="font-medium text-ink">Товари</h2>
         <ul className="mt-3 divide-y divide-line">
-          {order.items.map((item, index) => (
-            <li key={index} className="flex items-center justify-between py-3 text-sm">
-              <div>
-                <p className="font-medium text-ink">{item.name}</p>
-                <p className="text-ink-soft">
-                  {item.size} · {item.color} · {item.quantity} шт
-                </p>
-              </div>
-              <span className="font-medium text-ink">
-                {formatPrice(item.price * item.quantity)}
-              </span>
-            </li>
-          ))}
+          {order.items.map((item, index) => {
+            const product = products.find((p) => p._id === item.productId);
+            const image = product?.images[0]?.url;
+            return (
+              <li key={index} className="flex items-center gap-3 py-3 text-sm">
+                <div className="h-14 w-12 shrink-0 overflow-hidden rounded-lg bg-paper-soft">
+                  {image && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={getAssetUrl(image)}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  {product ? (
+                    <a
+                      href={`${SITE_URL}/product/${product.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 font-medium text-ink hover:underline"
+                    >
+                      {item.name}
+                      <LuExternalLink size={12} className="shrink-0 text-ink-soft" />
+                    </a>
+                  ) : (
+                    <p className="font-medium text-ink">{item.name}</p>
+                  )}
+                  <p className="text-ink-soft">
+                    {item.size} · {item.color} · {item.quantity} шт
+                  </p>
+                </div>
+                <span className="shrink-0 font-medium text-ink">
+                  {formatPrice(item.price * item.quantity)}
+                </span>
+              </li>
+            );
+          })}
         </ul>
         <div className="mt-3 space-y-1 border-t border-line pt-3 text-sm">
           <div className="flex justify-between text-ink-soft">
