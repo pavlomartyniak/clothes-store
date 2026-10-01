@@ -78,51 +78,74 @@ export function ProductGallery({
 
   return (
     <div className="min-w-0">
-      <button
-        type="button"
-        onClick={() => {
-          if (didSwipeMain.current) {
-            didSwipeMain.current = false;
-            return;
-          }
-          setLightboxOpen(true);
-        }}
-        onTouchStart={(e) => {
-          mainTouchStartX.current = e.touches[0].clientX;
-        }}
-        onTouchEnd={(e) => {
-          if (mainTouchStartX.current === null || count <= 1) return;
-          const delta = e.changedTouches[0].clientX - mainTouchStartX.current;
-          if (Math.abs(delta) > 40) {
-            didSwipeMain.current = true;
-            if (delta < 0) next();
-            else prev();
-          }
-          mainTouchStartX.current = null;
-        }}
-        className="group relative block aspect-4/5 w-full overflow-hidden rounded-3xl sm:aspect-3/4"
-        aria-label="Переглянути фото на весь екран"
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={index}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="h-full w-full"
-          >
-            {renderPhoto(index, "h-full w-full", true)}
-          </motion.div>
-        </AnimatePresence>
-        <div className="absolute left-4 top-4 flex flex-col gap-2">
-          {product.isNew && <Badge tone="ink">Новинка</Badge>}
-          {product.oldPrice && <Badge tone="accent">Знижка</Badge>}
-        </div>
-        <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-paper/90 text-ink opacity-0 backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
-          <LuExpand size={16} />
-        </span>
-      </button>
+      <div className="group relative">
+        <button
+          type="button"
+          onClick={() => {
+            if (didSwipeMain.current) {
+              didSwipeMain.current = false;
+              return;
+            }
+            setLightboxOpen(true);
+          }}
+          onTouchStart={(e) => {
+            mainTouchStartX.current = e.touches[0].clientX;
+          }}
+          onTouchEnd={(e) => {
+            if (mainTouchStartX.current === null || count <= 1) return;
+            const delta = e.changedTouches[0].clientX - mainTouchStartX.current;
+            if (Math.abs(delta) > 40) {
+              didSwipeMain.current = true;
+              if (delta < 0) next();
+              else prev();
+            }
+            mainTouchStartX.current = null;
+          }}
+          className="relative block aspect-4/5 w-full overflow-hidden rounded-3xl sm:aspect-3/4"
+          aria-label="Переглянути фото на весь екран"
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={index}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="h-full w-full"
+            >
+              {renderPhoto(index, "h-full w-full", true)}
+            </motion.div>
+          </AnimatePresence>
+          <div className="absolute left-4 top-4 flex flex-col gap-2">
+            {product.isNew && <Badge tone="ink">Новинка</Badge>}
+            {product.oldPrice && <Badge tone="accent">Знижка</Badge>}
+          </div>
+          <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-paper/90 text-ink opacity-0 backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
+            <LuExpand size={16} />
+          </span>
+        </button>
+
+        {count > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Попереднє фото"
+              onClick={prev}
+              className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink opacity-0 backdrop-blur transition-opacity duration-300 hover:bg-paper group-hover:opacity-100"
+            >
+              <LuChevronLeft size={20} />
+            </button>
+            <button
+              type="button"
+              aria-label="Наступне фото"
+              onClick={next}
+              className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-paper/90 text-ink opacity-0 backdrop-blur transition-opacity duration-300 hover:bg-paper group-hover:opacity-100"
+            >
+              <LuChevronRight size={20} />
+            </button>
+          </>
+        )}
+      </div>
 
       {count > 1 && (
         <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
