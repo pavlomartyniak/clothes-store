@@ -32,7 +32,7 @@ const scriptFont = Pinyon_Script({
 
 export const revalidate = 60;
 
-const defaultTitle = "Martosoli — люксові бренди - 1:1 до оригіналів";
+const defaultTitle = "Martosoli — люксові бренди одягу найвищої якості";
 const defaultDescription =
   "Martosoli — одяг найвищої якості 1:1 оригінальний від преміальних брендів: Chanel, Gucci, Prada, Dior та інші. Доставка Новою поштою по всій Україні, огляд при отриманні.";
 
