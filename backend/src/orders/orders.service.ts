@@ -22,7 +22,55 @@ export class OrdersService {
 
   async create(dto: CreateOrderDto) {
     const orderNumber = await this.generateOrderNumber();
-    return this.orderModel.create({ ...dto, orderNumber });
+    const order = await this.orderModel.create({ ...dto, orderNumber });
+    await this.notifyTelegram(order);
+    return order;
+  }
+
+  private async notifyTelegram(order: OrderDocument) {
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    if (!token || !chatId) return;
+
+    const deliveryLabel =
+      order.deliveryMethod === 'np-branch' ? 'Нова пошта, відділення' : "Кур'єром";
+    const paymentLabel = order.paymentMethod === 'cod' ? 'При отриманні' : 'Карткою онлайн';
+
+    const itemsText = order.items
+      .map(
+        (item) =>
+          `• ${item.name} — ${item.size}, ${item.color}, ${item.quantity} шт — ${item.price * item.quantity} грн`,
+      )
+      .join('\n');
+
+    const text = [
+      `🆕 Нове замовлення ${order.orderNumber}`,
+      '',
+      `👤 ${order.firstName} ${order.lastName}`,
+      `📞 ${order.phone}`,
+      `✉️ ${order.email}`,
+      '',
+      `📦 ${deliveryLabel}`,
+      `🏙 ${order.city}, ${order.address}`,
+      `💳 ${paymentLabel}`,
+      '',
+      'Товари:',
+      itemsText,
+      '',
+      `Разом: ${order.totalPrice + order.shippingCost} грн`,
+      ...(order.comment ? ['', `Коментар: ${order.comment}`] : []),
+    ].join('\n');
+
+    try {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, text }),
+      });
+    } catch (err) {
+      // Telegram being down shouldn't fail order creation.
+      console.error('Failed to send Telegram order notification:', err);
+    }
   }
 
   findAll(status?: OrderStatus) {
