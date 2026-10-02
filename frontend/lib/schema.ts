@@ -79,8 +79,8 @@ export function collectionPageSchema(name: string, url: string, productUrls: str
   };
 }
 
-/** Homepage only. No sameAs (no real social links yet) or telephone (no
- * real number yet) — better omitted than pointing at placeholders. */
+/** Homepage only. No telephone (no real number yet) — better omitted than
+ * pointing at a placeholder. */
 export function organizationAndWebsiteSchema() {
   return [
     {
@@ -89,6 +89,7 @@ export function organizationAndWebsiteSchema() {
       name: "Martosoli",
       url: siteUrl,
       logo: `${siteUrl}/logo.svg`,
+      sameAs: ["https://www.instagram.com/martosoli_store/"],
     },
     {
       "@context": "https://schema.org",

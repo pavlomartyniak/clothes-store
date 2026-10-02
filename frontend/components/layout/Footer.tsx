@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaTelegram } from "react-icons/fa";
+import { FaInstagram, FaTelegram } from "react-icons/fa";
 import { Brand, Category } from "@/lib/types";
 import { Logo } from "./Logo";
 
@@ -91,6 +91,17 @@ export function Footer({
                 className="hover:text-ink"
               >
                 Написати в Telegram
+              </a>
+            </li>
+            <li className="flex items-center gap-2">
+              <FaInstagram size={15} />
+              <a
+                href="https://www.instagram.com/martosoli_store/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-ink"
+              >
+                Instagram
               </a>
             </li>
           </ul>
