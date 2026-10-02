@@ -26,11 +26,11 @@ export function Hero({ products }: { products: Product[] }) {
         <div className="absolute inset-0 bg-linear-to-t from-ink/70 via-ink/10 to-transparent" />
         <Reveal className="relative max-w-md space-y-5 text-paper">
           <h1 className="font-display text-4xl leading-tight sm:text-5xl">
-            Високоякісні репліки люксових брендів — стиль без компромісів
+            Впізнаваний дизайн. Преміальне виконання.
           </h1>
           <p className="text-sm text-paper/85 sm:text-base">
-            Преміальні матеріали, продумані силуети та увага до деталей — речі
-            для щоденного стилю, від базових образів до вечірніх виходів.
+            Преміальні матеріали, точне виконання та культові силуети від
+            провідних fashion-брендів.
           </p>
           <LinkButton
             href="/catalog"
