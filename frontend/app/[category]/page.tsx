@@ -12,14 +12,6 @@ import { JsonLd } from "@/components/JsonLd";
 
 export const revalidate = 60;
 
-// A plain category name ("Светри") makes for a thin H1 — pair it with what
-// the shopper is actually looking for.
-const CATEGORY_H1: Record<string, string> = {
-  kostiumy: "Костюми та комплекти",
-  pidzhaky: "Піджаки та блейзери",
-  svetry: "Светри та кардигани",
-};
-
 export async function generateMetadata({
   params,
 }: {
@@ -87,7 +79,7 @@ export default async function CategoryPage({
             Каталог
           </span>
           <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
-            {CATEGORY_H1[category.slug] ?? category.name}
+            {category.name}
           </h1>
           {category.description && (
             <p className="mt-1 text-sm text-ink-soft">{category.description}</p>
