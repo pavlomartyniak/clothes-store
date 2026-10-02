@@ -104,6 +104,17 @@ export function Footer({
                 Instagram
               </a>
             </li>
+            <li className="flex items-center gap-2">
+              <FaTelegram size={15} />
+              <a
+                href="https://t.me/martosoli"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-ink"
+              >
+                Телеграм-канал
+              </a>
+            </li>
           </ul>
         </div>
       </div>

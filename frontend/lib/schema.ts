@@ -89,7 +89,7 @@ export function organizationAndWebsiteSchema() {
       name: "Martosoli",
       url: siteUrl,
       logo: `${siteUrl}/logo.svg`,
-      sameAs: ["https://www.instagram.com/martosoli_store/"],
+      sameAs: ["https://www.instagram.com/martosoli_store/", "https://t.me/martosoli"],
     },
     {
       "@context": "https://schema.org",
