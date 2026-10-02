@@ -15,13 +15,9 @@ export const revalidate = 60;
 // A plain category name ("Светри") makes for a thin H1 — pair it with what
 // the shopper is actually looking for.
 const CATEGORY_H1: Record<string, string> = {
-  kostiumy: "Жіночі костюми та комплекти",
-  kurtky: "Жіночі куртки",
-  palta: "Жіночі пальта",
-  pidzhaky: "Жіночі піджаки та блейзери",
-  svetry: "Жіночі светри та кардигани",
-  sumky: "Жіночі сумки",
-  shtany: "Жіночі штани",
+  kostiumy: "Костюми та комплекти",
+  pidzhaky: "Піджаки та блейзери",
+  svetry: "Светри та кардигани",
 };
 
 export async function generateMetadata({
