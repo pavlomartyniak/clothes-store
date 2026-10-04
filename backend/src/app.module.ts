@@ -10,7 +10,6 @@ import { CategoriesModule } from './categories/categories.module.js';
 import { ProductsModule } from './products/products.module.js';
 import { OrdersModule } from './orders/orders.module.js';
 import { BrandsModule } from './brands/brands.module.js';
-import { TelegramModule } from './telegram/telegram.module.js';
 
 @Module({
   imports: [
@@ -27,7 +26,6 @@ import { TelegramModule } from './telegram/telegram.module.js';
     ProductsModule,
     OrdersModule,
     BrandsModule,
-    TelegramModule,
   ],
   controllers: [AppController],
   providers: [
