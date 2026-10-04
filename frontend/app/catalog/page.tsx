@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { getCategories, getProducts } from "@/lib/products";
-import { categorySlug } from "@/lib/types";
+import { getBrands, getCategories, getProducts } from "@/lib/products";
+import { brandSlug, categorySlug } from "@/lib/types";
 import { ProductCard } from "@/components/product/ProductCard";
 import { CatalogSort } from "@/components/product/CatalogSort";
 import { CatalogFilters } from "@/components/product/CatalogFilters";
@@ -13,6 +13,7 @@ type SearchParams = Promise<{
   category?: string;
   sub?: string;
   size?: string;
+  brand?: string;
   priceMax?: string;
   sort?: string;
   search?: string;
@@ -33,12 +34,17 @@ export default async function CatalogPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const [products, categories] = await Promise.all([getProducts(), getCategories()]);
+  const [products, categories, brands] = await Promise.all([
+    getProducts(),
+    getCategories(),
+    getBrands(),
+  ]);
 
-  const { category, sub, size, priceMax, sort, search } = await searchParams;
+  const { category, sub, size, brand, priceMax, sort, search } = await searchParams;
   const activeCategory = categories.find((c) => c.slug === category)?.slug;
   const activeSubcategories = sub?.split(",").filter(Boolean) ?? [];
   const activeSizes = size?.split(",").filter(Boolean) ?? [];
+  const activeBrands = brand?.split(",").filter(Boolean) ?? [];
   const activePriceMax = priceMax ? Number(priceMax) : undefined;
 
   let list = activeCategory
@@ -55,6 +61,9 @@ export default async function CatalogPage({
   }
   if (activeSizes.length > 0) {
     list = list.filter((p) => p.sizes.some((s) => activeSizes.includes(s)));
+  }
+  if (activeBrands.length > 0) {
+    list = list.filter((p) => activeBrands.includes(brandSlug(p.brand)));
   }
   if (activePriceMax) {
     list = list.filter((p) => p.price <= activePriceMax);
@@ -101,7 +110,7 @@ export default async function CatalogPage({
           </div>
 
           <Suspense fallback={null}>
-            <ActiveFilterChips categories={categories} />
+            <ActiveFilterChips categories={categories} brands={brands} />
           </Suspense>
 
           {list.length === 0 ? (

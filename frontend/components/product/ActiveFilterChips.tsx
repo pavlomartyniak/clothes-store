@@ -2,15 +2,22 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { LuX } from "react-icons/lu";
-import { Category } from "@/lib/types";
+import { Brand, Category } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
 import { useCatalogParams } from "./CatalogFilters";
 
-export function ActiveFilterChips({ categories }: { categories: Category[] }) {
+export function ActiveFilterChips({
+  categories,
+  brands,
+}: {
+  categories: Category[];
+  brands: Brand[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { category, subcategories, sizes, priceMax } = useCatalogParams(categories);
+  const { category, subcategories, sizes, brands: activeBrands, priceMax } =
+    useCatalogParams(categories);
 
   function updateParams(mutate: (params: URLSearchParams) => void) {
     const params = new URLSearchParams(searchParams.toString());
@@ -65,6 +72,20 @@ export function ActiveFilterChips({ categories }: { categories: Category[] }) {
           const next = sizes.filter((s) => s !== size);
           if (next.length) params.set("size", next.join(","));
           else params.delete("size");
+        }),
+    });
+  });
+
+  activeBrands.forEach((brand) => {
+    const label = brands.find((b) => b.slug === brand)?.name ?? brand;
+    chips.push({
+      key: `brand-${brand}`,
+      label,
+      onRemove: () =>
+        updateParams((params) => {
+          const next = activeBrands.filter((b) => b !== brand);
+          if (next.length) params.set("brand", next.join(","));
+          else params.delete("brand");
         }),
     });
   });

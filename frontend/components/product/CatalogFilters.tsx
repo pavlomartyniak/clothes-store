@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { getAvailableSizes, getPriceBounds, getSubcategories } from "@/lib/products";
+import { getAvailableBrands, getAvailableSizes, getPriceBounds, getSubcategories } from "@/lib/products";
 import { Category, Product } from "@/lib/types";
 import { cn, formatPrice } from "@/lib/utils";
 
@@ -12,9 +12,10 @@ export function useCatalogParams(categories: Category[]) {
   const category = categories.find((c) => c.slug === categorySlug)?.slug;
   const subcategories = searchParams.get("sub")?.split(",").filter(Boolean) ?? [];
   const sizes = searchParams.get("size")?.split(",").filter(Boolean) ?? [];
+  const brands = searchParams.get("brand")?.split(",").filter(Boolean) ?? [];
   const priceMaxParam = searchParams.get("priceMax");
   const priceMax = priceMaxParam ? Number(priceMaxParam) : undefined;
-  return { category, subcategories, sizes, priceMax };
+  return { category, subcategories, sizes, brands, priceMax };
 }
 
 export function CatalogFilters({
@@ -31,12 +32,13 @@ export function CatalogFilters({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { category, subcategories, sizes, priceMax } = useCatalogParams(categories);
+  const { category, subcategories, sizes, brands, priceMax } = useCatalogParams(categories);
   const bounds = getPriceBounds(products);
   const [draftPrice, setDraftPrice] = useState(priceMax ?? bounds.max);
 
   const availableSubcategories = getSubcategories(categories, category);
   const availableSizes = getAvailableSizes(products, category, subcategories);
+  const availableBrands = getAvailableBrands(products, category);
 
   function updateParams(mutate: (params: URLSearchParams) => void) {
     const params = new URLSearchParams(searchParams.toString());
@@ -75,6 +77,16 @@ export function CatalogFilters({
     });
   }
 
+  function toggleBrand(value: string) {
+    updateParams((params) => {
+      const current = new Set(brands);
+      if (current.has(value)) current.delete(value);
+      else current.add(value);
+      if (current.size) params.set("brand", Array.from(current).join(","));
+      else params.delete("brand");
+    });
+  }
+
   function commitPrice(value: number) {
     updateParams((params) => {
       if (value >= bounds.max) params.delete("priceMax");
@@ -87,7 +99,9 @@ export function CatalogFilters({
     setDraftPrice(bounds.max);
   }
 
-  const hasActiveFilters = Boolean(category || subcategories.length || sizes.length || priceMax);
+  const hasActiveFilters = Boolean(
+    category || subcategories.length || sizes.length || brands.length || priceMax
+  );
 
   return (
     <div className="space-y-8">
@@ -177,6 +191,25 @@ export function CatalogFilters({
               >
                 {size}
               </button>
+            ))}
+          </div>
+        </fieldset>
+      )}
+
+      {availableBrands.length > 0 && (
+        <fieldset>
+          <legend className="mb-3 text-sm font-medium text-ink">Бренд</legend>
+          <div className="flex flex-col gap-2.5">
+            {availableBrands.map((brand) => (
+              <label key={brand.slug} className="flex items-center gap-2.5 text-sm text-ink-soft">
+                <input
+                  type="checkbox"
+                  checked={brands.includes(brand.slug)}
+                  onChange={() => toggleBrand(brand.slug)}
+                  className="h-4 w-4 rounded border-line accent-ink"
+                />
+                {brand.name}
+              </label>
             ))}
           </div>
         </fieldset>

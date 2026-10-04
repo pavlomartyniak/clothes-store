@@ -1,6 +1,7 @@
 import { apiGet } from "./api";
 import {
   Brand,
+  brandName as getBrandName,
   brandSlug as getBrandSlug,
   Category,
   categorySlug as getCategorySlug,
@@ -108,6 +109,21 @@ export function getAvailableSizes(
   const sizes = new Set<string>();
   scoped.forEach((p) => p.sizes.forEach((s) => sizes.add(s)));
   return sortSizes(Array.from(sizes));
+}
+
+export function getAvailableBrands(products: Product[], activeCategorySlug?: string) {
+  const scoped = activeCategorySlug
+    ? products.filter((p) => getCategorySlug(p.category) === activeCategorySlug)
+    : products;
+  const bySlug = new Map<string, string>();
+  scoped.forEach((p) => {
+    const slug = getBrandSlug(p.brand);
+    const name = getBrandName(p.brand);
+    if (slug && name) bySlug.set(slug, name);
+  });
+  return Array.from(bySlug, ([slug, name]) => ({ slug, name })).sort((a, b) =>
+    a.name.localeCompare(b.name, "uk")
+  );
 }
 
 export function getPriceBounds(products: Product[]) {
