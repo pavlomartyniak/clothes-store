@@ -4,6 +4,7 @@ import { Model, QueryFilter } from 'mongoose';
 import { Order, OrderDocument, OrderStatus } from './schemas/order.schema.js';
 import { CreateOrderDto } from './dto/create-order.dto.js';
 import { ProductsService } from '../products/products.service.js';
+import { sendAdminMessage } from '../common/telegram-notify.js';
 
 const SITE_URL = 'https://martosoli.com';
 
@@ -32,10 +33,6 @@ export class OrdersService {
   }
 
   private async notifyTelegram(order: OrderDocument) {
-    const token = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
-    if (!token || !chatId) return;
-
     const deliveryLabel =
       order.deliveryMethod === 'np-branch' ? 'Нова пошта, відділення' : "Кур'єром";
     const paymentLabel = order.paymentMethod === 'cod' ? 'При отриманні' : 'Карткою онлайн';
@@ -78,16 +75,7 @@ export class OrdersService {
       ...(order.comment ? ['', `Коментар: ${order.comment}`] : []),
     ].join('\n');
 
-    try {
-      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, text }),
-      });
-    } catch (err) {
-      // Telegram being down shouldn't fail order creation.
-      console.error('Failed to send Telegram order notification:', err);
-    }
+    await sendAdminMessage(text);
   }
 
   findAll(status?: OrderStatus) {
