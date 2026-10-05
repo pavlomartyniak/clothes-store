@@ -1,7 +1,10 @@
-"use client";
+import { cn } from "@/lib/utils";
 
-import { motion } from "framer-motion";
-
+/**
+ * Fade/slide-in entrance, pure CSS (see .animate-reveal in globals.css) —
+ * deliberately not JS-driven (no framer-motion/IntersectionObserver), so the
+ * content is never stuck invisible if a script fails to run on some browser.
+ */
 export function Reveal({
   children,
   delay = 0,
@@ -12,14 +15,11 @@ export function Reveal({
   className?: string;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
-      className={className}
+    <div
+      className={cn("animate-reveal", className)}
+      style={delay ? { animationDelay: `${delay}s` } : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
