@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { LuMenu, LuSearch, LuShoppingBag, LuUser, LuX } from "react-icons/lu";
 import { useCart } from "@/lib/cart-context";
 import { Category } from "@/lib/types";
 import { useMounted } from "@/lib/use-mounted";
-import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
 
 export function Header({ categories }: { categories: Category[] }) {
@@ -102,42 +102,48 @@ export function Header({ categories }: { categories: Category[] }) {
 
       {mounted &&
         createPortal(
-          <div
-            className={cn(
-              "fixed inset-0 z-50 bg-ink/40 transition-opacity duration-300 lg:hidden",
-              menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+          <AnimatePresence>
+            {menuOpen && (
+              <motion.div
+                className="fixed inset-0 z-50 bg-ink/40 lg:hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                onClick={() => setMenuOpen(false)}
+              >
+                <motion.div
+                  className="absolute inset-y-0 left-0 w-[80%] max-w-xs bg-paper p-6"
+                  initial={{ x: "-100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "-100%" }}
+                  transition={{ type: "spring", damping: 32, stiffness: 320 }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-display text-xl">
+                      <Logo />
+                    </span>
+                    <button aria-label="Закрити меню" onClick={() => setMenuOpen(false)}>
+                      <LuX size={22} />
+                    </button>
+                  </div>
+                  <nav className="mt-10 flex flex-col gap-6">
+                    {navLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setMenuOpen(false)}
+                        className="text-lg font-medium text-ink"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </nav>
+                </motion.div>
+              </motion.div>
             )}
-            onClick={() => setMenuOpen(false)}
-          >
-            <div
-              className={cn(
-                "absolute inset-y-0 left-0 w-[80%] max-w-xs bg-paper p-6 transition-transform duration-300 ease-out",
-                menuOpen ? "translate-x-0" : "-translate-x-full"
-              )}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-display text-xl">
-                  <Logo />
-                </span>
-                <button aria-label="Закрити меню" onClick={() => setMenuOpen(false)}>
-                  <LuX size={22} />
-                </button>
-              </div>
-              <nav className="mt-10 flex flex-col gap-6">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="text-lg font-medium text-ink"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          </div>,
+          </AnimatePresence>,
           document.body
         )}
     </>
